@@ -31,6 +31,15 @@
 
   <actions>
     <!-- Add your actions here -->
+      <action id="start-server" class="github.jk1.smtpidea.actions.StartServerAction" text="Start server"
+              description="start mail server">
+          <add-to-group group-id="ToolsMenu" anchor="last"/>
+          <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl S"/>
+      </action>
+      <action id="stop-server-action" class="github.jk1.smtpidea.actions.StopServerAction" text="Stop SMTP server">
+          <add-to-group group-id="ToolsMenu" anchor="last"/>
+          <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl D"/>
+      </action>
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
