@@ -7,9 +7,12 @@ import org.junit.Test;
  *
  */
 public class StartServerActionTest {
+
+    private StartServerAction action;
+
     @Before
     public void setUp() throws Exception {
-
+        action = new StartServerAction();
     }
 
     @Test
