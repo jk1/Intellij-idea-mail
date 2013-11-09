@@ -13,11 +13,13 @@
       <sourceFolder url="file://$MODULE_DIR$/test/resources" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/icons" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="subethasmtp_authpatch_gwc-3.1.7.1" level="project" />
     <orderEntry type="library" name="javax.mail-api-1.5.0" level="project" />
+    <orderEntry type="library" name="slf4j-api-1.7.5" level="project" />
   </component>
 </module>
 

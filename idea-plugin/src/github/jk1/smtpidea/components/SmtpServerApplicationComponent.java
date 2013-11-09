@@ -1,47 +1,77 @@
 package github.jk1.smtpidea.components;
 
 import com.intellij.openapi.components.*;
+import com.intellij.openapi.project.Project;
+import github.jk1.smtpidea.server.ConfigurableSmtpServer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  *
  */
-
 @State(
         name = "SmtpConfiguration",
         storages = {
-                @Storage(id = "smtp_plugin.config", file = StoragePathMacros.APP_CONFIG + ".config")
+                @Storage(id = "smtp_plugin.config", file = StoragePathMacros.PROJECT_CONFIG_DIR + "smtp.config")
         }
 )
-public class SmtpServerApplicationComponent implements
-        ApplicationComponent, PersistentStateComponent<PluginConfiguration> {
+public class SmtpServerApplicationComponent
+        extends AbstractProjectComponent implements PersistentStateComponent<PluginConfiguration> {
 
+    private PluginConfiguration configuration = PluginConfiguration.getDefault();
+    private ConfigurableSmtpServer server;
 
-    public SmtpServerApplicationComponent() {
+    public SmtpServerApplicationComponent(@NotNull Project project) {
+        super(project);
     }
 
-    public void initComponent() {
-        // TODO: insert component initialization logic here
-    }
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void disposeComponent() {
-        // TODO: insert component disposal logic here
+        if (server.isRunning()) {
+            server.stopServer();
+        }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void initComponent() {
+        server = ServiceManager.getService(myProject, ConfigurableSmtpServer.class);
+        server.setConfiguration(configuration.smtpConfig);
+        if (configuration.launchOnStartup) {
+            server.startServer();
+        }
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
     @NotNull
     public String getComponentName() {
         return "SmtpServerApplicationComponent";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nullable
     @Override
     public PluginConfiguration getState() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return configuration;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void loadState(PluginConfiguration pluginConfiguration) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (pluginConfiguration != null) {
+            configuration = pluginConfiguration;
+        }
     }
 }

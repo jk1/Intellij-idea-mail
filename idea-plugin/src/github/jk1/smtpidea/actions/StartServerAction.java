@@ -2,6 +2,9 @@ package github.jk1.smtpidea.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.util.IconLoader;
+import github.jk1.smtpidea.server.ConfigurableSmtpServer;
 
 /**
  *
@@ -9,11 +12,12 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 public class StartServerAction extends AnAction {
 
     public StartServerAction() {
-        super("Start mail server");
+        super("Start mail server", "Description", IconLoader.getIcon("/general/run.png"));
     }
 
     public void actionPerformed(AnActionEvent e) {
-        //ToolWindowManager.getInstance().registerToolWindow()registerToolWindow()
+        ConfigurableSmtpServer server = ServiceManager.getService(e.getProject(), ConfigurableSmtpServer.class);
+        server.startServer();
     }
 
 
