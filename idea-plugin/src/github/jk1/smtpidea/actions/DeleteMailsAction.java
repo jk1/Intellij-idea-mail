@@ -14,7 +14,8 @@ import github.jk1.smtpidea.components.MailStoreComponent;
 public class DeleteMailsAction extends AnAction {
 
     public DeleteMailsAction() {
-        super("Delete all mails", "Description", IconLoader.getIcon("/actions/delete.png"));
+        super("Clear all", "Delete all mails from mail server",
+              IconLoader.getIcon("/clear.png"));   //"/actions/delete.png"
     }
 
     /**

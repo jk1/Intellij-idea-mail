@@ -10,8 +10,13 @@ import github.jk1.smtpidea.server.ServerConfiguration;
  */
 public class PluginConfiguration {
 
-    public final boolean launchOnStartup;
-    public final ServerConfiguration smtpConfig;
+    public  boolean launchOnStartup;
+    public ServerConfiguration smtpConfig;
+
+    /**
+     * For serialization purposes only
+     */
+    public PluginConfiguration() {}
 
     /**
      * @param launchOnStartup if SMTP server should be automatically launched on project load

@@ -9,6 +9,7 @@ import github.jk1.smtpidea.server.ConfigurableSmtpServer;
 
 /**
  *
+ * @author Evgeny Naumenko
  */
 public class StartServerAction extends AnAction {
 
@@ -20,9 +21,12 @@ public class StartServerAction extends AnAction {
      * {@inheritDoc}
      */
     @Override
-    public void actionPerformed(AnActionEvent e) {
-        ConfigurableSmtpServer server = ServiceManager.getService(e.getProject(), ConfigurableSmtpServer.class);
-        server.startServer();
+    public void actionPerformed(AnActionEvent anActionEvent) {
+        Project project = anActionEvent.getProject();
+        if (project != null) {
+            ConfigurableSmtpServer server = ServiceManager.getService(project, ConfigurableSmtpServer.class);
+            server.startServer();
+        }
     }
 
     /**

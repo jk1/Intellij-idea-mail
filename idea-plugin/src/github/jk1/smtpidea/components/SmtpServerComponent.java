@@ -9,10 +9,13 @@ import org.jetbrains.annotations.Nullable;
 /**
  *
  */
+
 @State(
-        name = "SmtpConfiguration",
+        name = "SmtpServerComponent",
         storages = {
-                @Storage(id = "smtp_plugin.config", file = StoragePathMacros.PROJECT_CONFIG_DIR + "smtp.config")
+                @Storage(id = "default", file = StoragePathMacros.PROJECT_FILE),
+                @Storage(id = "dir", file = StoragePathMacros.PROJECT_CONFIG_DIR + "/smtp.xml",
+                         scheme = StorageScheme.DIRECTORY_BASED)
         }
 )
 public class SmtpServerComponent
@@ -47,6 +50,14 @@ public class SmtpServerComponent
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @NotNull
+    @Override
+    public String getComponentName() {
+        return "SmtpServerComponent";
+    }
 
     /**
      * {@inheritDoc}
@@ -62,8 +73,12 @@ public class SmtpServerComponent
      */
     @Override
     public void loadState(PluginConfiguration pluginConfiguration) {
+        //may be called any time, check everything
         if (pluginConfiguration != null) {
             configuration = pluginConfiguration;
+            if (server != null) {
+                server.setConfiguration(pluginConfiguration.smtpConfig);
+            }
         }
     }
 }

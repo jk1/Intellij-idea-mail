@@ -12,6 +12,9 @@ import github.jk1.smtpidea.server.ConfigurableSmtpServer;
 import github.jk1.smtpidea.ui.ConfigurationDialog;
 
 /**
+ * Launches plugin configuration dialog.
+ * If configuration has been changed running SMTP server is restarted.
+ *
  * @author Evgeny Naumenko
  */
 public class ConfigureAction extends AnAction {
@@ -27,15 +30,7 @@ public class ConfigureAction extends AnAction {
     public void actionPerformed(final AnActionEvent anActionEvent) {
         final Project project = anActionEvent.getProject();
         if (project != null) {
-            final ConfigurableSmtpServer server = ServiceManager.getService(project, ConfigurableSmtpServer.class);
-            DialogWrapper dialog = new ConfigurationDialog(anActionEvent.getProject(), new ConfigurationDialog.OkActionCallback() {
-                @Override
-                public void configurationUpdated(PluginConfiguration configuration) {
-                    server.setConfiguration(configuration.smtpConfig);
-                    SmtpServerComponent component = project.getComponent(SmtpServerComponent.class);
-                    component.loadState(configuration);
-                }
-            });
+            DialogWrapper dialog = new ConfigurationDialog(anActionEvent.getProject());
             dialog.show();
         }
     }

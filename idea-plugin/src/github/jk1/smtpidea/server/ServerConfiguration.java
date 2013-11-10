@@ -2,10 +2,17 @@ package github.jk1.smtpidea.server;
 
 /**
  *
+ * @author Evgeny Naumenko
  */
 public class ServerConfiguration {
 
-    public final int port;
+    public int port;
+
+    /**
+     * For serialization purposes only
+     */
+    public ServerConfiguration() {
+    }
 
     public ServerConfiguration(int port) {
         this.port = port;

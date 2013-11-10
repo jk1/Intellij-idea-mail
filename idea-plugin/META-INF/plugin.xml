@@ -2,7 +2,7 @@
     <id>intellijSmtpServer</id>
     <name>SMTP server plugin</name>
     <version>0.1-SNAPSHOT</version>
-    <vendor url="http://www.yourcompany.com">YourCompany</vendor>
+    <vendor url="https://github.com/jk1/Intellij-smtp-server">Jk1</vendor>
 
     <description><![CDATA[SMTP server plugin for Intellij Idea]]></description>
 
