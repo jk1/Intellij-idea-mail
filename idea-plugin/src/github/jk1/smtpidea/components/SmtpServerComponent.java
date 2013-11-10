@@ -15,13 +15,13 @@ import org.jetbrains.annotations.Nullable;
                 @Storage(id = "smtp_plugin.config", file = StoragePathMacros.PROJECT_CONFIG_DIR + "smtp.config")
         }
 )
-public class SmtpServerApplicationComponent
+public class SmtpServerComponent
         extends AbstractProjectComponent implements PersistentStateComponent<PluginConfiguration> {
 
     private PluginConfiguration configuration = PluginConfiguration.getDefault();
     private ConfigurableSmtpServer server;
 
-    public SmtpServerApplicationComponent(@NotNull Project project) {
+    public SmtpServerComponent(@NotNull Project project) {
         super(project);
     }
 
@@ -47,14 +47,6 @@ public class SmtpServerApplicationComponent
         }
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    @NotNull
-    public String getComponentName() {
-        return "SmtpServerApplicationComponent";
-    }
 
     /**
      * {@inheritDoc}

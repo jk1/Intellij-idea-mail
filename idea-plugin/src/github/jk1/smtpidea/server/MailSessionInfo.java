@@ -1,15 +1,16 @@
 package github.jk1.smtpidea.server;
 
+import github.jk1.smtpidea.components.MailStoreComponent;
 import org.subethamail.smtp.MessageContext;
 import org.subethamail.smtp.MessageHandler;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -20,15 +21,17 @@ import java.util.Properties;
  */
 public class MailSessionInfo implements MessageHandler {
 
-    private DateFormat format = new SimpleDateFormat("HH:mm:SS");
+    private MailStoreComponent mailStore;
+
     private Date receivedDate;
     private String envelopeFrom;
     private Collection<String> envelopeRecipients = new ArrayList<String>();
     private MessageContext context;
     private MimeMessage message;
 
-    public MailSessionInfo(MessageContext context) {
+    public MailSessionInfo(MessageContext context, MailStoreComponent mailStore) {
         this.context = context;
+        this.mailStore = mailStore;
     }
 
     /**
@@ -66,23 +69,31 @@ public class MailSessionInfo implements MessageHandler {
     @Override
     public void done() {
         receivedDate = new Date();
-        MailStore.addMessage(this);
+        mailStore.addMessage(this);
     }
 
-    public static int getFieldCount() {
-        return 3;
+
+    public Date getReceivedDate(){
+      return receivedDate;
     }
 
-    public Object getValue(int column) {
-        switch (column) {
-            case 1:
-                return format.format(receivedDate);
-            case 2:
-                return envelopeFrom;
-            case 3:
-                return envelopeRecipients;
-            default:
-                return "Error! No value defined for column " + column;
+    public String getEnvelopeFrom() {
+        return envelopeFrom;
+    }
+
+    public Collection<String> getEnvelopeRecipients() {
+        return envelopeRecipients;
+    }
+
+    public String getRawMessage() {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        try {
+            message.writeTo(stream);
+        } catch (IOException e) {
+            e.printStackTrace(new PrintWriter(stream));
+        } catch (MessagingException e) {
+            e.printStackTrace(new PrintWriter(stream));
         }
+        return new String(stream.toByteArray());
     }
 }

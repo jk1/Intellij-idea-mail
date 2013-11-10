@@ -34,6 +34,7 @@ public class ConfigurationDialog extends DialogWrapper {
         JPanel panel = new JPanel();
         portSpinner = new JSpinner();
         portSpinner.setValue(25);
+        panel.add(new JLabel("Port: "));
         panel.add(portSpinner);
         launchOnStartup = new JCheckBox("Launch on startup");
         launchOnStartup.setSelected(false);

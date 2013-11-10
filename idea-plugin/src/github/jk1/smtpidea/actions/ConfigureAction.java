@@ -3,15 +3,15 @@ package github.jk1.smtpidea.actions;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.IconLoader;
 import github.jk1.smtpidea.components.PluginConfiguration;
+import github.jk1.smtpidea.components.SmtpServerComponent;
 import github.jk1.smtpidea.server.ConfigurableSmtpServer;
 import github.jk1.smtpidea.ui.ConfigurationDialog;
 
 /**
- *
- *
  * @author Evgeny Naumenko
  */
 public class ConfigureAction extends AnAction {
@@ -24,15 +24,20 @@ public class ConfigureAction extends AnAction {
      * {@inheritDoc}
      */
     @Override
-    public void actionPerformed(final AnActionEvent e) {
-        final ConfigurableSmtpServer server = ServiceManager.getService(e.getProject(), ConfigurableSmtpServer.class);
-        DialogWrapper dialog = new ConfigurationDialog(e.getProject(), new ConfigurationDialog.OkActionCallback() {
-            @Override
-            public void configurationUpdated(PluginConfiguration configuration) {
-                server.setConfiguration(configuration.smtpConfig);
-            }
-        });
-        dialog.show();
+    public void actionPerformed(final AnActionEvent anActionEvent) {
+        final Project project = anActionEvent.getProject();
+        if (project != null) {
+            final ConfigurableSmtpServer server = ServiceManager.getService(project, ConfigurableSmtpServer.class);
+            DialogWrapper dialog = new ConfigurationDialog(anActionEvent.getProject(), new ConfigurationDialog.OkActionCallback() {
+                @Override
+                public void configurationUpdated(PluginConfiguration configuration) {
+                    server.setConfiguration(configuration.smtpConfig);
+                    SmtpServerComponent component = project.getComponent(SmtpServerComponent.class);
+                    component.loadState(configuration);
+                }
+            });
+            dialog.show();
+        }
     }
 
 }

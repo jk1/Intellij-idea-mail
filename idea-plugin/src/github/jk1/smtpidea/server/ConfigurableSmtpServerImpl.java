@@ -3,6 +3,8 @@ package github.jk1.smtpidea.server;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
+import com.intellij.openapi.project.Project;
+import github.jk1.smtpidea.components.MailStoreComponent;
 import org.subethamail.smtp.MessageContext;
 import org.subethamail.smtp.MessageHandler;
 import org.subethamail.smtp.MessageHandlerFactory;
@@ -14,7 +16,12 @@ import org.subethamail.smtp.server.SMTPServer;
 public class ConfigurableSmtpServerImpl implements ConfigurableSmtpServer {
 
     private SMTPServer server = new SMTPServer(new HandlerFactory());
+    private MailStoreComponent mailStore;
     private ServerConfiguration configuration;
+
+    public ConfigurableSmtpServerImpl(Project project) {
+        mailStore = project.getComponent(MailStoreComponent.class);
+    }
 
     @Override
     public void setConfiguration(ServerConfiguration configuration) {
@@ -61,14 +68,14 @@ public class ConfigurableSmtpServerImpl implements ConfigurableSmtpServer {
         Notifications.Bus.notify(notification);
     }
 
-    private static class HandlerFactory implements MessageHandlerFactory {
+    private class HandlerFactory implements MessageHandlerFactory {
 
         /**
          * {@inheritDoc}
          */
         @Override
         public MessageHandler create(MessageContext ctx) {
-            return new MailSessionInfo(ctx);
+            return new MailSessionInfo(ctx, mailStore);
         }
     }
 }
