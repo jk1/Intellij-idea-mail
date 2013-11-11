@@ -51,6 +51,8 @@ public class MailToolWindowFactory implements ToolWindowFactory {
         mailTable.setDefaultRenderer(Iterable.class, new MultilineCellRenderer());
         mailTable.setStriped(true);
         mailTable.setExpandableItemsEnabled(true);
+        mailTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+        mailTable.getColumnModel().getColumn(1).setPreferredWidth(100);
         JScrollPane pane = new JBScrollPane(mailTable);
         panel.add(pane, BorderLayout.CENTER);
         panel.add(createButtonPane(), BorderLayout.NORTH);

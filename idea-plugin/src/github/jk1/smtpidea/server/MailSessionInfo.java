@@ -4,8 +4,7 @@ import github.jk1.smtpidea.components.MailStoreComponent;
 import org.subethamail.smtp.MessageContext;
 import org.subethamail.smtp.MessageHandler;
 
-import javax.mail.MessagingException;
-import javax.mail.Session;
+import javax.mail.*;
 import javax.mail.internet.MimeMessage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -73,8 +72,8 @@ public class MailSessionInfo implements MessageHandler {
     }
 
 
-    public Date getReceivedDate(){
-      return receivedDate;
+    public Date getReceivedDate() {
+        return receivedDate;
     }
 
     public String getEnvelopeFrom() {
@@ -83,6 +82,10 @@ public class MailSessionInfo implements MessageHandler {
 
     public Collection<String> getEnvelopeRecipients() {
         return envelopeRecipients;
+    }
+
+    public String getIp() {
+        return context.getRemoteAddress().toString();
     }
 
     public String getRawMessage() {
@@ -95,5 +98,42 @@ public class MailSessionInfo implements MessageHandler {
             e.printStackTrace(new PrintWriter(stream));
         }
         return new String(stream.toByteArray());
+    }
+
+    public String getFormattedMessage() {
+        try {
+            StringBuilder builder = new StringBuilder();
+            this.handleMessage(message, builder);
+            return builder.toString();
+        } catch (IOException e) {
+            return e.getMessage();
+        } catch (MessagingException e) {
+            return e.getMessage();
+        }
+    }
+
+    public void handleMessage(Message message, StringBuilder builder) throws IOException, MessagingException {
+        Object content = message.getContent();
+        if (content instanceof String) {
+            builder.append(content);
+        } else if (content instanceof Multipart) {
+            handleMultipart((Multipart) content, builder);
+        }
+    }
+
+    public void handleMultipart(Multipart mp, StringBuilder builder) throws MessagingException, IOException {
+        for (int i = 0; i < mp.getCount(); i++) {
+            BodyPart bp = mp.getBodyPart(i);
+            Object content = bp.getContent();
+            if (content instanceof String) {
+                builder.append(content);
+            } else if (content instanceof InputStream) {
+                builder.append("\n").append("[Binary data]").append("\n");
+            } else if (content instanceof Message) {
+                handleMessage((Message) content, builder);
+            } else if (content instanceof Multipart) {
+                handleMultipart((Multipart) content, builder);
+            }
+        }
     }
 }

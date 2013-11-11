@@ -3,6 +3,7 @@ package github.jk1.smtpidea.ui;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Renders collection in a JTable cell as multiline list.
@@ -18,7 +19,7 @@ public class MultilineCellRenderer extends DefaultTableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
                                                    boolean isSelected, boolean hasFocus, int row, int column) {
-        Iterable iterable = (Iterable) value;
+        Iterable iterable = (ArrayList) value;
         StringBuilder builder = new StringBuilder();
         for (Object item : iterable) {
             builder.append(item.toString()).append("\n");

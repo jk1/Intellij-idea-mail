@@ -53,8 +53,8 @@ public class MailStoreComponent extends AbstractProjectComponent {
 
     public class MailTableModel extends DefaultTableModel {
 
-        private DateFormat format = new SimpleDateFormat("HH:mm:SS");
-        private String[] columns = {"Received data", "From (Envelope)", "Recipients (Envelope)"};
+        private DateFormat format = new SimpleDateFormat("DD MMM HH:mm:ss");
+        private String[] columns = {"Received", "IP", "From (Envelope)", "Recipients (Envelope)"};
 
         /**
          * {@inheritDoc}
@@ -69,7 +69,7 @@ public class MailStoreComponent extends AbstractProjectComponent {
          */
         @Override
         public int getColumnCount() {
-            return 3;
+            return 4;
         }
 
         /**
@@ -106,8 +106,10 @@ public class MailStoreComponent extends AbstractProjectComponent {
                 case 0:
                     return format.format(info.getReceivedDate());
                 case 1:
-                    return info.getEnvelopeFrom();
+                    return info.getIp();
                 case 2:
+                    return info.getEnvelopeFrom();
+                case 3:
                     return info.getEnvelopeRecipients();
             }
             throw new IllegalStateException("No value defined for column " + columnIndex);
