@@ -2,14 +2,14 @@ package github.jk1.smtpidea.components;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
-import github.jk1.smtpidea.server.ConfigurableSmtpServer;
+import github.jk1.smtpidea.server.SmtpServerManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  *
+ * @author Evgeny Naumenko
  */
-
 @State(
         name = "SmtpServerComponent",
         storages = {
@@ -21,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
 public class SmtpServerComponent
         extends AbstractProjectComponent implements PersistentStateComponent<PluginConfiguration> {
 
-    private PluginConfiguration configuration = PluginConfiguration.getDefault();
-    private ConfigurableSmtpServer server;
+    private PluginConfiguration configuration = new PluginConfiguration();
+    private SmtpServerManager server;
 
     public SmtpServerComponent(@NotNull Project project) {
         super(project);
@@ -43,7 +43,7 @@ public class SmtpServerComponent
      */
     @Override
     public void initComponent() {
-        server = ServiceManager.getService(myProject, ConfigurableSmtpServer.class);
+        server = ServiceManager.getService(myProject, SmtpServerManager.class);
         server.setConfiguration(configuration.smtpConfig);
         if (configuration.launchOnStartup) {
             server.startServer();

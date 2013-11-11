@@ -5,40 +5,37 @@ import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.project.Project;
 import github.jk1.smtpidea.components.MailStoreComponent;
-import org.subethamail.smtp.MessageContext;
-import org.subethamail.smtp.MessageHandler;
-import org.subethamail.smtp.MessageHandlerFactory;
 import org.subethamail.smtp.server.SMTPServer;
 
 /**
  *
  */
-public class ConfigurableSmtpServerImpl implements ConfigurableSmtpServer {
+public class SmtpServerManager {
 
-    private SMTPServer server = new SMTPServer(new HandlerFactory());
+    private SMTPServer server;
     private MailStoreComponent mailStore;
     private ServerConfiguration configuration;
 
-    public ConfigurableSmtpServerImpl(Project project) {
+    public SmtpServerManager(Project project) {
         mailStore = project.getComponent(MailStoreComponent.class);
     }
 
-    @Override
     public void setConfiguration(ServerConfiguration configuration) {
         this.configuration = configuration;
-        if (server.isRunning()) {
+        // restart server on configuration change
+        if (this.isRunning()) {
             this.stopServer();
             this.startServer();
         }
     }
 
-    @Override
     public void startServer() {
+        if (configuration.transportSecurity == ServerConfiguration.TransportSecurity.SSL) {
+            server = new SmtpsMailServer(mailStore, configuration);
+        } else {
+            server = new SmtpMailServer(mailStore, configuration);
+        }
         try {
-            server = new SMTPServer(new HandlerFactory());
-            server.setDisableReceivedHeaders(true);
-            server.setPort(configuration.port);
-            server.setSoftwareName("Intellij Idea ESMTP Server");
             server.start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,7 +43,6 @@ public class ConfigurableSmtpServerImpl implements ConfigurableSmtpServer {
         }
     }
 
-    @Override
     public void stopServer() {
         try {
             if (server.isRunning()) {
@@ -58,24 +54,12 @@ public class ConfigurableSmtpServerImpl implements ConfigurableSmtpServer {
         }
     }
 
-    @Override
     public boolean isRunning() {
-        return server.isRunning();
+        return server != null && server.isRunning();
     }
 
     private void notifyFailure(String message) {
         Notification notification = new Notification("", "Title", message, NotificationType.ERROR);
         Notifications.Bus.notify(notification);
-    }
-
-    private class HandlerFactory implements MessageHandlerFactory {
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public MessageHandler create(MessageContext ctx) {
-            return new MailSessionInfo(ctx, mailStore);
-        }
     }
 }

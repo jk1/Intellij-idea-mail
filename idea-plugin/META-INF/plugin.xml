@@ -37,7 +37,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Mail Server" secondary="true" icon="/email.png" anchor="bottom"
                     factoryClass="github.jk1.smtpidea.ui.MailToolWindowFactory"/>
-        <projectService serviceInterface="github.jk1.smtpidea.server.ConfigurableSmtpServer"
-                        serviceImplementation="github.jk1.smtpidea.server.ConfigurableSmtpServerImpl"/>
+        <projectService serviceInterface="github.jk1.smtpidea.server.SmtpServerManager"
+                        serviceImplementation="github.jk1.smtpidea.server.SmtpServerManager"/>
     </extensions>
 </idea-plugin>

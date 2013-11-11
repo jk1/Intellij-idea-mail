@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
-import github.jk1.smtpidea.server.ConfigurableSmtpServer;
+import github.jk1.smtpidea.server.SmtpServerManager;
 
 /**
  *
@@ -23,7 +23,7 @@ public class StopServerAction extends AnAction {
     public void actionPerformed(AnActionEvent anActionEvent) {
         Project project = anActionEvent.getProject();
         if (project != null) {
-            ConfigurableSmtpServer server = ServiceManager.getService(project, ConfigurableSmtpServer.class);
+            SmtpServerManager server = ServiceManager.getService(project, SmtpServerManager.class);
             server.stopServer();
         }
     }
@@ -35,7 +35,7 @@ public class StopServerAction extends AnAction {
     public void update(AnActionEvent anActionEvent) {
         Project project = anActionEvent.getProject();
         if (project != null) {
-            ConfigurableSmtpServer server = ServiceManager.getService(project, ConfigurableSmtpServer.class);
+            SmtpServerManager server = ServiceManager.getService(project, SmtpServerManager.class);
             anActionEvent.getPresentation().setEnabled(server.isRunning());
         }
     }

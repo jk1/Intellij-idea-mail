@@ -1,20 +1,17 @@
 package github.jk1.smtpidea.server;
 
 /**
- *
  * @author Evgeny Naumenko
  */
 public class ServerConfiguration {
 
-    public int port;
+    public static enum AuthType {DISABLED, SUPPORTED, ENFORCED}
 
-    /**
-     * For serialization purposes only
-     */
-    public ServerConfiguration() {
-    }
+    public static enum TransportSecurity {PLAINTEXT, STARTTLS_SUPPORTED, STARTTLS_ENFORCED, SSL}
 
-    public ServerConfiguration(int port) {
-        this.port = port;
-    }
+    public int port = 25;
+    public AuthType authType = AuthType.DISABLED;
+    public TransportSecurity transportSecurity =  TransportSecurity.PLAINTEXT;
+    public String login = "";
+    public String password = "";
 }

@@ -11,6 +11,13 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import static github.jk1.smtpidea.server.ServerConfiguration.AuthType;
+import static github.jk1.smtpidea.server.ServerConfiguration.AuthType.*;
+import static github.jk1.smtpidea.server.ServerConfiguration.TransportSecurity;
+import static github.jk1.smtpidea.server.ServerConfiguration.TransportSecurity.*;
 
 /**
  * @author Evgeny Naumenko
@@ -22,12 +29,12 @@ public class ConfigurationDialog extends DialogWrapper {
     private JSpinner portSpinner = new JSpinner();
     private JCheckBox launchOnStartup = new JCheckBox("Launch on startup");
 
-    private ButtonGroup authRadioGroup = new ButtonGroup();
+    private EnumRadioGroup<AuthType> authRadioGroup = new EnumRadioGroup<AuthType>();
     private JRadioButton noAuthenticationRadio = new JRadioButton("Anonymous mode");
     private JRadioButton authSupportedRadio = new JRadioButton("Support optional authentication");
     private JRadioButton authEnforcedRadio = new JRadioButton("Require authentication");
 
-    private ButtonGroup sslRadioGroup = new ButtonGroup();
+    private EnumRadioGroup<TransportSecurity> sslRadioGroup = new EnumRadioGroup<TransportSecurity>();
     private JRadioButton plainRadio = new JRadioButton("Plain SMTP");
     private JRadioButton startTlsSupportedRadio = new JRadioButton("Support STARTTLS");
     private JRadioButton startTlsEnforcedRadio = new JRadioButton("Require STARTTLS");
@@ -38,7 +45,7 @@ public class ConfigurationDialog extends DialogWrapper {
 
     public ConfigurationDialog(Project project) {
         super(project, false);
-        this.component = project.getComponent(SmtpServerComponent.class);
+        component = project.getComponent(SmtpServerComponent.class);
         this.setTitle("SMTP Server Configuration");
         this.init();
     }
@@ -53,18 +60,16 @@ public class ConfigurationDialog extends DialogWrapper {
         contextPane.add(createTopPanel(), BorderLayout.NORTH);
         contextPane.add(createAuthPane(), BorderLayout.WEST);
         contextPane.add(createSslPane(), BorderLayout.EAST);
+        this.installCurrentConfigurationValues(component.getState());
         return contextPane;
     }
 
     private JPanel createTopPanel() {
-        PluginConfiguration config = component.getState();
         JPanel panel = new JPanel();
         Border lineBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
         panel.setBorder(BorderFactory.createTitledBorder(lineBorder, "General"));
-        portSpinner.setValue(config.smtpConfig.port);
         panel.add(new JLabel("Port: "));
         panel.add(portSpinner);
-        launchOnStartup.setSelected(config.launchOnStartup);
         panel.add(launchOnStartup);
         return panel;
     }
@@ -74,10 +79,14 @@ public class ConfigurationDialog extends DialogWrapper {
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
         Border lineBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
         panel.setBorder(BorderFactory.createTitledBorder(lineBorder, "Authentication"));
-        authRadioGroup.add(noAuthenticationRadio);
-        authRadioGroup.add(authSupportedRadio);
-        authRadioGroup.add(authEnforcedRadio);
+        authRadioGroup.add(noAuthenticationRadio, DISABLED);
+        authRadioGroup.add(authSupportedRadio, SUPPORTED);
+        authRadioGroup.add(authEnforcedRadio, ENFORCED);
         panel.add(noAuthenticationRadio);
+        ActionListener listener = new AuthenticationSetupActionListener();
+        noAuthenticationRadio.addActionListener(listener);
+        authSupportedRadio.addActionListener(listener);
+        authEnforcedRadio.addActionListener(listener);
         panel.add(authSupportedRadio);
         panel.add(authEnforcedRadio);
         panel.add(wrap("Username: ", login));
@@ -90,10 +99,10 @@ public class ConfigurationDialog extends DialogWrapper {
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
         Border lineBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
         panel.setBorder(BorderFactory.createTitledBorder(lineBorder, "SSL/TLS"));
-        sslRadioGroup.add(plainRadio);
-        sslRadioGroup.add(startTlsSupportedRadio);
-        sslRadioGroup.add(startTlsEnforcedRadio);
-        sslRadioGroup.add(sslOnConnectRadio);
+        sslRadioGroup.add(plainRadio, PLAINTEXT);
+        sslRadioGroup.add(startTlsSupportedRadio, STARTTLS_SUPPORTED);
+        sslRadioGroup.add(startTlsEnforcedRadio, STARTTLS_ENFORCED);
+        sslRadioGroup.add(sslOnConnectRadio, SSL);
         panel.add(plainRadio);
         panel.add(startTlsSupportedRadio);
         panel.add(startTlsEnforcedRadio);
@@ -109,14 +118,38 @@ public class ConfigurationDialog extends DialogWrapper {
         return panel;
     }
 
+    private void installCurrentConfigurationValues(PluginConfiguration configuration) {
+        portSpinner.setValue(configuration.smtpConfig.port);
+        launchOnStartup.setSelected(configuration.launchOnStartup);
+        authRadioGroup.setSelected(configuration.smtpConfig.authType);
+        sslRadioGroup.setSelected(configuration.smtpConfig.transportSecurity);
+        login.setText(configuration.smtpConfig.login);
+        password.setText(configuration.smtpConfig.password);
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     protected void doOKAction() {
         super.doOKAction();
-        ServerConfiguration serverConfiguration = new ServerConfiguration((Integer) portSpinner.getValue());
-        PluginConfiguration configuration = new PluginConfiguration(launchOnStartup.isSelected(), serverConfiguration);
+        ServerConfiguration serverConfiguration = new ServerConfiguration( );
+        serverConfiguration.port = (Integer) portSpinner.getValue();
+        serverConfiguration.authType = authRadioGroup.getSelected();
+        serverConfiguration.transportSecurity = sslRadioGroup.getSelected();
+        serverConfiguration.login = login.getText();
+        serverConfiguration.password = password.getText();
+        PluginConfiguration configuration = new PluginConfiguration();
+        configuration.launchOnStartup = launchOnStartup.isSelected();
+        configuration.smtpConfig = serverConfiguration;
         component.loadState(configuration);
+    }
+
+    private class AuthenticationSetupActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            login.setEnabled(!noAuthenticationRadio.isSelected());
+            password.setEnabled(!noAuthenticationRadio.isSelected());
+        }
     }
 }
