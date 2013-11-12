@@ -20,6 +20,8 @@
     <orderEntry type="library" name="subethasmtp_authpatch_gwc-3.1.7.1" level="project" />
     <orderEntry type="library" name="slf4j-api-1.7.5" level="project" />
     <orderEntry type="library" name="javax.mail-1.5.0" level="project" />
+    <orderEntry type="library" name="apache-mime4j-core-0.7.2" level="project" />
+    <orderEntry type="library" name="apache-mime4j-dom-0.7.2" level="project" />
   </component>
 </module>
 

@@ -2,7 +2,7 @@ package github.jk1.smtpidea.components;
 
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
-import github.jk1.smtpidea.server.MailSessionInfo;
+import github.jk1.smtpidea.server.MailSession;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class MailStoreComponent extends AbstractProjectComponent {
 
-    private static List<MailSessionInfo> messages = new ArrayList<MailSessionInfo>();
+    private static List<MailSession> messages = new ArrayList<MailSession>();
     private MailTableModel model = new MailTableModel();
 
     public MailStoreComponent(@NotNull Project project) {
@@ -25,7 +25,7 @@ public class MailStoreComponent extends AbstractProjectComponent {
     }
 
 
-    public void addMessage(final MailSessionInfo info) {
+    public void addMessage(final MailSession info) {
         // method may be called from outside EDT
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -101,7 +101,7 @@ public class MailStoreComponent extends AbstractProjectComponent {
          */
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
-            MailSessionInfo info = messages.get(rowIndex);
+            MailSession info = messages.get(rowIndex);
             switch (columnIndex) {
                 case 0:
                     return format.format(info.getReceivedDate());
@@ -115,7 +115,7 @@ public class MailStoreComponent extends AbstractProjectComponent {
             throw new IllegalStateException("No value defined for column " + columnIndex);
         }
 
-        public MailSessionInfo getMailSessionInfo(int index) {
+        public MailSession getMailSessionInfo(int index) {
             return messages.get(index);
         }
     }

@@ -20,6 +20,8 @@ import static github.jk1.smtpidea.server.ServerConfiguration.TransportSecurity;
 import static github.jk1.smtpidea.server.ServerConfiguration.TransportSecurity.*;
 
 /**
+ * Plugin configuration dialog
+ *
  * @author Evgeny Naumenko
  */
 public class ConfigurationDialog extends DialogWrapper {
@@ -43,6 +45,9 @@ public class ConfigurationDialog extends DialogWrapper {
     private JTextField login = new JTextField(20);
     private JTextField password = new JTextField(20);
 
+    /**
+     * @param project current project (plugin configuration is project-scoped)
+     */
     public ConfigurationDialog(Project project) {
         super(project, false);
         component = project.getComponent(SmtpServerComponent.class);
@@ -118,6 +123,11 @@ public class ConfigurationDialog extends DialogWrapper {
         return panel;
     }
 
+    /**
+     * Installs current configuration values in UI controls
+     *
+     * @param configuration current plugin configuration
+     */
     private void installCurrentConfigurationValues(PluginConfiguration configuration) {
         portSpinner.setValue(configuration.smtpConfig.port);
         launchOnStartup.setSelected(configuration.launchOnStartup);
@@ -128,7 +138,7 @@ public class ConfigurationDialog extends DialogWrapper {
     }
 
     /**
-     * {@inheritDoc}
+     *  Saves selected configuration and closes configuration dialog
      */
     @Override
     protected void doOKAction() {
@@ -145,6 +155,9 @@ public class ConfigurationDialog extends DialogWrapper {
         component.loadState(configuration);
     }
 
+    /**
+     * Disables login/password text fields if authentication is turned off
+     */
     private class AuthenticationSetupActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {

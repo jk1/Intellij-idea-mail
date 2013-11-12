@@ -97,7 +97,7 @@ class SmtpMailServer extends SMTPServer {
 
         @Override
         public MessageHandler create(MessageContext ctx) {
-            return new MailSessionInfo(ctx, mailStore);
+            return new MailSession(ctx, mailStore);
         }
     }
 

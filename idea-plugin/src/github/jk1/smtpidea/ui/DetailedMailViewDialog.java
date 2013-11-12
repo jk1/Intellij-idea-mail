@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
-import github.jk1.smtpidea.server.MailSessionInfo;
+import github.jk1.smtpidea.server.MailSession;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,10 +15,10 @@ import javax.swing.*;
  */
 public class DetailedMailViewDialog extends DialogWrapper {
 
-    private MailSessionInfo info;
+    private MailSession info;
     private JBTabbedPane tabbedPane;
 
-    protected DetailedMailViewDialog(@Nullable Project project, MailSessionInfo info) {
+    protected DetailedMailViewDialog(@Nullable Project project, MailSession info) {
         super(project);
         this.setTitle("Incoming Mail View");
         this.info = info;

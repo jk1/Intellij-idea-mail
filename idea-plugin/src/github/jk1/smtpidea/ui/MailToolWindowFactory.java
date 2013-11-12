@@ -14,7 +14,7 @@ import github.jk1.smtpidea.actions.DeleteMailsAction;
 import github.jk1.smtpidea.actions.StartServerAction;
 import github.jk1.smtpidea.actions.StopServerAction;
 import github.jk1.smtpidea.components.MailStoreComponent;
-import github.jk1.smtpidea.server.MailSessionInfo;
+import github.jk1.smtpidea.server.MailSession;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,7 +78,7 @@ public class MailToolWindowFactory implements ToolWindowFactory {
             if (e.getClickCount() > 1) { //double+ click
                 int row = mailTable.getSelectedRow();
                 if (row != -1) {
-                    MailSessionInfo info = tableModel.getMailSessionInfo(row);
+                    MailSession info = tableModel.getMailSessionInfo(row);
                     new DetailedMailViewDialog(project, info).show();
                 }
             }

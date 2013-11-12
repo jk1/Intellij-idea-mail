@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="apache-mime4j-core-0.7.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/idea-plugin/lib/apache-mime4j-core-0.7.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/idea-plugin/lib/apache-mime4j-examples-0.7.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ideaLibSources/apache-mime4j-examples-0.7.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

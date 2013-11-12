@@ -18,7 +18,7 @@ import java.util.Properties;
 /**
  *
  */
-public class MailSessionInfo implements MessageHandler {
+public class MailSession implements MessageHandler {
 
     private MailStoreComponent mailStore;
 
@@ -28,7 +28,7 @@ public class MailSessionInfo implements MessageHandler {
     private MessageContext context;
     private MimeMessage message;
 
-    public MailSessionInfo(MessageContext context, MailStoreComponent mailStore) {
+    public MailSession(MessageContext context, MailStoreComponent mailStore) {
         this.context = context;
         this.mailStore = mailStore;
     }
@@ -89,6 +89,16 @@ public class MailSessionInfo implements MessageHandler {
     }
 
     public String getRawMessage() {
+        /*ContentHandler handler = new MyHandler();
+        MimeConfig config = new MimeConfig();
+        MimeStreamParser parser = new MimeStreamParser(config);
+        parser.setContentHandler(handler);
+        InputStream instream = new FileInputStream("mime.msg");
+        try {
+            parser.parse(instream);
+        } finally {
+            instream.close();
+        }*/
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         try {
             message.writeTo(stream);
