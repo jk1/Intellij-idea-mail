@@ -1,4 +1,4 @@
-package github.jk1.smtpidea.server;
+package github.jk1.smtpidea.server.smtp;
 
 import github.jk1.smtpidea.components.MailStoreComponent;
 import org.subethamail.smtp.MessageContext;
@@ -89,16 +89,6 @@ public class MailSession implements MessageHandler {
     }
 
     public String getRawMessage() {
-        /*ContentHandler handler = new MyHandler();
-        MimeConfig config = new MimeConfig();
-        MimeStreamParser parser = new MimeStreamParser(config);
-        parser.setContentHandler(handler);
-        InputStream instream = new FileInputStream("mime.msg");
-        try {
-            parser.parse(instream);
-        } finally {
-            instream.close();
-        }*/
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         try {
             message.writeTo(stream);

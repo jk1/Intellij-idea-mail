@@ -1,4 +1,4 @@
-package github.jk1.smtpidea.server;
+package github.jk1.smtpidea.server.smtp;
 
 import github.jk1.smtpidea.components.MailStoreComponent;
 

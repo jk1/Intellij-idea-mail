@@ -2,7 +2,8 @@ package github.jk1.smtpidea.components;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
-import github.jk1.smtpidea.server.SmtpServerManager;
+import github.jk1.smtpidea.server.ServerManager;
+import github.jk1.smtpidea.server.smtp.SmtpServerManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +23,7 @@ public class SmtpServerComponent
         extends AbstractProjectComponent implements PersistentStateComponent<PluginConfiguration> {
 
     private PluginConfiguration configuration = new PluginConfiguration();
-    private SmtpServerManager server;
+    private ServerManager server;
 
     public SmtpServerComponent(@NotNull Project project) {
         super(project);

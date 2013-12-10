@@ -1,6 +1,6 @@
 package github.jk1.smtpidea.components;
 
-import github.jk1.smtpidea.server.ServerConfiguration;
+import github.jk1.smtpidea.server.smtp.ServerConfiguration;
 
 /**
  * Represents entire plugin configuration, project-scoped,

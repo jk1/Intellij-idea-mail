@@ -11,10 +11,10 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.table.JBTable;
 import github.jk1.smtpidea.actions.ConfigureAction;
 import github.jk1.smtpidea.actions.DeleteMailsAction;
-import github.jk1.smtpidea.actions.StartServerAction;
-import github.jk1.smtpidea.actions.StopServerAction;
+import github.jk1.smtpidea.actions.StartSmtpServerAction;
+import github.jk1.smtpidea.actions.StopSmtpServerAction;
 import github.jk1.smtpidea.components.MailStoreComponent;
-import github.jk1.smtpidea.server.MailSession;
+import github.jk1.smtpidea.server.smtp.MailSession;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,8 +61,8 @@ public class MailToolWindowFactory implements ToolWindowFactory {
 
     private JComponent createButtonPane() {
         DefaultActionGroup group = new DefaultActionGroup();
-        group.add(new StartServerAction());
-        group.add(new StopServerAction());
+        group.add(new StartSmtpServerAction());
+        group.add(new StopSmtpServerAction());
         group.add(new ConfigureAction());
         group.add(new DeleteMailsAction());
         return ActionManager.getInstance().createActionToolbar("Actions", group, true).getComponent();

@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import github.jk1.smtpidea.components.PluginConfiguration;
 import github.jk1.smtpidea.components.SmtpServerComponent;
-import github.jk1.smtpidea.server.ServerConfiguration;
+import github.jk1.smtpidea.server.smtp.ServerConfiguration;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -14,10 +14,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static github.jk1.smtpidea.server.ServerConfiguration.AuthType;
-import static github.jk1.smtpidea.server.ServerConfiguration.AuthType.*;
-import static github.jk1.smtpidea.server.ServerConfiguration.TransportSecurity;
-import static github.jk1.smtpidea.server.ServerConfiguration.TransportSecurity.*;
+import static github.jk1.smtpidea.server.smtp.ServerConfiguration.AuthType;
+import static github.jk1.smtpidea.server.smtp.ServerConfiguration.AuthType.*;
+import static github.jk1.smtpidea.server.smtp.ServerConfiguration.TransportSecurity;
+import static github.jk1.smtpidea.server.smtp.ServerConfiguration.TransportSecurity.*;
 
 /**
  * Plugin configuration dialog

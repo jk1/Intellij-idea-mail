@@ -22,6 +22,7 @@
     <orderEntry type="library" name="javax.mail-1.5.0" level="project" />
     <orderEntry type="library" name="apache-mime4j-core-0.7.2" level="project" />
     <orderEntry type="library" name="apache-mime4j-dom-0.7.2" level="project" />
+    <orderEntry type="library" name="mina-core-2.0.7" level="project" />
   </component>
 </module>
 

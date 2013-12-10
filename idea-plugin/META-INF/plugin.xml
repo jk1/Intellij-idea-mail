@@ -1,6 +1,6 @@
 <idea-plugin version="2">
-    <id>intellijSmtpServer</id>
-    <name>SMTP server plugin</name>
+    <id>intellijIdeaMail</id>
+    <name>Mail Server Plugin</name>
     <version>0.1-SNAPSHOT</version>
     <vendor url="https://github.com/jk1/Intellij-smtp-server">Jk1</vendor>
 
@@ -37,7 +37,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Mail Server" secondary="true" icon="/email.png" anchor="bottom"
                     factoryClass="github.jk1.smtpidea.ui.MailToolWindowFactory"/>
-        <projectService serviceInterface="github.jk1.smtpidea.server.SmtpServerManager"
-                        serviceImplementation="github.jk1.smtpidea.server.SmtpServerManager"/>
+        <projectService serviceInterface="github.jk1.smtpidea.server.smtp.SmtpServerManager"
+                        serviceImplementation="github.jk1.smtpidea.server.smtp.SmtpServerManager"/>
     </extensions>
 </idea-plugin>

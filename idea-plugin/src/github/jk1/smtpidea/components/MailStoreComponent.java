@@ -2,7 +2,7 @@ package github.jk1.smtpidea.components;
 
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
-import github.jk1.smtpidea.server.MailSession;
+import github.jk1.smtpidea.server.smtp.MailSession;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

@@ -1,4 +1,4 @@
-package github.jk1.smtpidea.server;
+package github.jk1.smtpidea.server.smtp;
 
 /**
  * @author Evgeny Naumenko

@@ -1,16 +1,17 @@
-package github.jk1.smtpidea.server;
+package github.jk1.smtpidea.server.smtp;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.project.Project;
 import github.jk1.smtpidea.components.MailStoreComponent;
+import github.jk1.smtpidea.server.ServerManager;
 import org.subethamail.smtp.server.SMTPServer;
 
 /**
  *
  */
-public class SmtpServerManager {
+public class SmtpServerManager implements ServerManager {
 
     private SMTPServer server;
     private MailStoreComponent mailStore;
@@ -20,6 +21,7 @@ public class SmtpServerManager {
         mailStore = project.getComponent(MailStoreComponent.class);
     }
 
+    @Override
     public void setConfiguration(ServerConfiguration configuration) {
         this.configuration = configuration;
         // restart server on configuration change
@@ -29,6 +31,7 @@ public class SmtpServerManager {
         }
     }
 
+    @Override
     public void startServer() {
         if (configuration.transportSecurity == ServerConfiguration.TransportSecurity.SSL) {
             server = new SmtpsMailServer(mailStore, configuration);
@@ -43,6 +46,7 @@ public class SmtpServerManager {
         }
     }
 
+    @Override
     public void stopServer() {
         try {
             if (server.isRunning()) {
@@ -54,6 +58,7 @@ public class SmtpServerManager {
         }
     }
 
+    @Override
     public boolean isRunning() {
         return server != null && server.isRunning();
     }

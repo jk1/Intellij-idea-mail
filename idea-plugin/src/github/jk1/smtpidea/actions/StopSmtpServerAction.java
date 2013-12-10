@@ -5,16 +5,16 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
-import github.jk1.smtpidea.server.SmtpServerManager;
+import github.jk1.smtpidea.server.ServerManager;
+import github.jk1.smtpidea.server.smtp.SmtpServerManager;
 
 /**
  *
- * @author Evgeny Naumenko
  */
-public class StartServerAction extends AnAction {
+public class StopSmtpServerAction extends AnAction {
 
-    public StartServerAction() {
-        super("Start mail server", "Description", IconLoader.getIcon("/general/run.png"));
+    public StopSmtpServerAction() {
+        super("Stop mail server", "Description", IconLoader.getIcon("/process/stop.png"));
     }
 
     /**
@@ -24,8 +24,8 @@ public class StartServerAction extends AnAction {
     public void actionPerformed(AnActionEvent anActionEvent) {
         Project project = anActionEvent.getProject();
         if (project != null) {
-            SmtpServerManager server = ServiceManager.getService(project, SmtpServerManager.class);
-            server.startServer();
+            ServerManager server = ServiceManager.getService(project, SmtpServerManager.class);
+            server.stopServer();
         }
     }
 
@@ -36,8 +36,8 @@ public class StartServerAction extends AnAction {
     public void update(AnActionEvent anActionEvent) {
         Project project = anActionEvent.getProject();
         if (project != null) {
-            SmtpServerManager server = ServiceManager.getService(project, SmtpServerManager.class);
-            anActionEvent.getPresentation().setEnabled(!server.isRunning());
+            ServerManager server = ServiceManager.getService(project, SmtpServerManager.class);
+            anActionEvent.getPresentation().setEnabled(server.isRunning());
         }
     }
 }

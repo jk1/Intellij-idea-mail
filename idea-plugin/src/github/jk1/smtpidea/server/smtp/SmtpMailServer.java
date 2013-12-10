@@ -1,4 +1,4 @@
-package github.jk1.smtpidea.server;
+package github.jk1.smtpidea.server.smtp;
 
 import github.jk1.smtpidea.components.MailStoreComponent;
 import org.subethamail.smtp.MessageContext;
@@ -15,10 +15,10 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import static github.jk1.smtpidea.server.ServerConfiguration.AuthType.DISABLED;
-import static github.jk1.smtpidea.server.ServerConfiguration.AuthType.ENFORCED;
-import static github.jk1.smtpidea.server.ServerConfiguration.TransportSecurity.STARTTLS_ENFORCED;
-import static github.jk1.smtpidea.server.ServerConfiguration.TransportSecurity.STARTTLS_SUPPORTED;
+import static github.jk1.smtpidea.server.smtp.ServerConfiguration.AuthType.DISABLED;
+import static github.jk1.smtpidea.server.smtp.ServerConfiguration.AuthType.ENFORCED;
+import static github.jk1.smtpidea.server.smtp.ServerConfiguration.TransportSecurity.STARTTLS_ENFORCED;
+import static github.jk1.smtpidea.server.smtp.ServerConfiguration.TransportSecurity.STARTTLS_SUPPORTED;
 
 
 /**
@@ -52,20 +52,20 @@ class SmtpMailServer extends SMTPServer {
     }
 
     private void setupAuthentication() {
-        if (configuration.authType != DISABLED) {
+        if (configuration.authType != ServerConfiguration.AuthType.DISABLED) {
             this.setAuthenticationHandlerFactory(
                     new EasyAuthenticationHandlerFactory(new CredentialsValidator()));
-            if (configuration.authType == ENFORCED) {
+            if (configuration.authType == ServerConfiguration.AuthType.ENFORCED) {
                 this.setRequireAuth(true);
             }
         }
     }
 
     private void setupStarttls() {
-        if (configuration.transportSecurity == STARTTLS_SUPPORTED) {
+        if (configuration.transportSecurity == ServerConfiguration.TransportSecurity.STARTTLS_SUPPORTED) {
             this.setEnableTLS(true);
         }
-        if (configuration.transportSecurity == STARTTLS_ENFORCED) {
+        if (configuration.transportSecurity == ServerConfiguration.TransportSecurity.STARTTLS_ENFORCED) {
             this.setEnableTLS(true);
             this.setRequireTLS(true);
         }
