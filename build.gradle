@@ -8,6 +8,8 @@ configurations {
 
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
+    main.resources.srcDirs += 'icons'
+    main.resources.srcDirs += 'META-INF'
     test.java.srcDirs += 'src/test/kotlin'
 }
 
@@ -46,8 +48,7 @@ buildscript {
     }
 }
 
-task dist(type:Zip){
-    from jar.outputs.files
-    from dependencies
-    baseName = 'Intellij-smtp-server1'
+task dist(dependsOn: jar, type:Zip){
+    from jar.outputs.files, configurations.runtime
+    archiveName = 'Intellij-mail.zip'
 }
