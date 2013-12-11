@@ -1,6 +1,6 @@
 <idea-plugin version="2">
     <id>intellijIdeaMail</id>
-    <name>Mail Server Plugin</name>
+    <name>Mail Server</name>
     <version>0.1-SNAPSHOT</version>
     <vendor url="https://github.com/jk1/Intellij-smtp-server">Jk1</vendor>
 

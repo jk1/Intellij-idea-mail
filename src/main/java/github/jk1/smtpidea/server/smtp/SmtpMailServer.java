@@ -15,11 +15,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import static github.jk1.smtpidea.server.smtp.ServerConfiguration.AuthType.DISABLED;
-import static github.jk1.smtpidea.server.smtp.ServerConfiguration.AuthType.ENFORCED;
-import static github.jk1.smtpidea.server.smtp.ServerConfiguration.TransportSecurity.STARTTLS_ENFORCED;
-import static github.jk1.smtpidea.server.smtp.ServerConfiguration.TransportSecurity.STARTTLS_SUPPORTED;
-
 
 /**
  * SMTP mail server implementation.
