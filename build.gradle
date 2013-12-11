@@ -1,6 +1,11 @@
 apply plugin: 'java'
 apply plugin: 'kotlin'
 
+configurations {
+    provided
+    compile.extendsFrom provided
+}
+
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
     test.java.srcDirs += 'src/test/kotlin'
@@ -23,10 +28,10 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.5'
 
     compile files('lib/subethasmtp_authpatch_gwc-3.1.7.1.jar')
-    compile files('lib/openapi.jar')
-    compile files('lib/annotations.jar')
-    compile files('lib/util.jar')
-    compile files('lib/extensions.jar')
+    provided files('lib/openapi.jar')
+    provided files('lib/annotations.jar')
+    provided files('lib/util.jar')
+    provided files('lib/extensions.jar')
 
     testCompile 'junit:junit:4.+'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$ext.kotlin_version"
@@ -39,4 +44,10 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$ext.kotlin_version"
     }
+}
+
+task dist(type:Zip){
+    from jar.outputs.files
+    from dependencies
+    baseName = 'Intellij-smtp-server1'
 }

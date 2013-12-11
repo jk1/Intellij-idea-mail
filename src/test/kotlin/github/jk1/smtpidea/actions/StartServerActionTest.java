@@ -8,11 +8,10 @@ import org.junit.Test;
  */
 public class StartServerActionTest {
 
-    private StartSmtpServerAction action;
+
 
     @Before
     public void setUp() throws Exception {
-        action = new StartSmtpServerAction();
     }
 
     @Test
