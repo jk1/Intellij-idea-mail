@@ -1,10 +1,20 @@
 Intellij-smtp-server
 ====================
 
-SMTP server plugin for Intellij Idea
+Mail server plugin for Intellij Idea.
+If your code is sending or receiving e-mails this plugin will provide lightweight SMTP/POP3 services inside the IDE to test your application.
 
+How to build from source with Gradle
+=================================
 
-How to build and launch with Idea
+1. First of all make sure you hae Gradle installed
+2. From gradle console execute "gradle dist"
+3. Navigate to {$Project_dir}/build and find plugin assembled as ZIP archive
+4. Launch Intellij Idea, navigate to Settings -> Plugins -> Install plugin from disk
+5. Choose zip archive assembled at step (3)
+6. Restart Idea and enjoy the plugin running
+
+How to build from source with Intellij Idea
 =================================
 
 You need to execute the following instructions once. Having a project set up correctly you can launch the plugin in one click anytime.
