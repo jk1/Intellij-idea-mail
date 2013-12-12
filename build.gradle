@@ -8,8 +8,6 @@ configurations {
 
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
-    main.resources.srcDirs += 'icons'
-    main.resources.srcDirs += 'META-INF'
     test.java.srcDirs += 'src/test/kotlin'
 }
 
