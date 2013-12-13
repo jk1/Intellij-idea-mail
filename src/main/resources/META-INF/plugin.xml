@@ -26,6 +26,9 @@
             <implementation-class>github.jk1.smtpidea.components.SmtpServerComponent</implementation-class>
         </component>
         <component>
+            <implementation-class>github.jk1.smtpidea.components.Pop3ServerComponent</implementation-class>
+        </component>
+        <component>
             <implementation-class>github.jk1.smtpidea.components.MailStoreComponent</implementation-class>
         </component>
     </project-components>
