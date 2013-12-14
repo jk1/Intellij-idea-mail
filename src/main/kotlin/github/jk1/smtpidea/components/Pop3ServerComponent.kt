@@ -4,11 +4,9 @@ import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
 
 import com.intellij.openapi.components.StoragePathMacros.*
-import com.intellij.openapi.components.StorageScheme.*
-import github.jk1.smtpidea.server.ServerManager
-import github.jk1.smtpidea.server.smtp.SmtpServerManager
 import github.jk1.smtpidea.server.pop3.Pop3ServerManager
 import github.jk1.smtpidea.config.Pop3Config
+import github.jk1.smtpidea.Files
 
 /**
  * Manages embedded POP3 server
@@ -18,15 +16,15 @@ import github.jk1.smtpidea.config.Pop3Config
 State(
         name = "Pop3ServerComponent",
         storages = array(
-                Storage(id = "default", file = PROJECT_FILE),
-                Storage(id = "dir", file = PROJECT_CONFIG_DIR + "/pop3.xml", scheme = DIRECTORY_BASED)
+                Storage(id = "default", file = StoragePathMacros.PROJECT_FILE),
+                Storage(id = "dir", file = "\$PROJECT_CONFIG_DIR\$" + "/pop3.xml", scheme = StorageScheme.DIRECTORY_BASED)
         )
 )
-public class Pop3ServerComponent(project: Project) : AbstractProjectComponent(project), PersistentStateComponent<Pop3Config> {
+public class Pop3ServerComponent(val project: Project) : AbstractProjectComponent(project), PersistentStateComponent<Pop3Config> {
 
     private var configuration: Pop3Config = Pop3Config()
     private var server: Pop3ServerManager? = null
-    private var project = project;
+
 
 
     public override fun disposeComponent(): Unit {
