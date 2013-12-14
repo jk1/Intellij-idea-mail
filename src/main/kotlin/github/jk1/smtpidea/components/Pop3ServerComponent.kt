@@ -6,7 +6,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.components.StoragePathMacros.*
 import github.jk1.smtpidea.server.pop3.Pop3ServerManager
 import github.jk1.smtpidea.config.Pop3Config
-import github.jk1.smtpidea.Files
 
 /**
  * Manages embedded POP3 server
