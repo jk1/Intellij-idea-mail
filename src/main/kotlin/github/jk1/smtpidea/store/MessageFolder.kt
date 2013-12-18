@@ -1,27 +1,23 @@
-package github.jk1.smtpidea.server.base;
-
-import java.util.Collection;
+import javax.mail.internet.MimeMessage
 
 /**
  * @author Evgeny Naumenko
  */
-public interface MessageFolder {
-
+public trait MessageFolder {
     /**
      *
      * @return - collection of all messages in this folder
      */
-    public Collection<MessageResource> getMessages();
-
+    open fun getMessages() : List<MimeMessage>
     /**
      *
      * @return -  number of messages in this folder
      */
-    public int numMessages();
-
+    open fun numMessages() : Int
     /**
      *
      * @return - sum of octet size of all messages in this folder
      */
-    public int totalSize();
+    open fun totalSize() : Int
+
 }

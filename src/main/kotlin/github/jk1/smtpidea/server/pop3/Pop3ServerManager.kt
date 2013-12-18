@@ -10,14 +10,24 @@ import github.jk1.smtpidea.ServerManager
  */
 public class Pop3ServerManager : ServerManager<Pop3Config>{
 
-    override fun setConfiguration(configuration: Pop3Config) {
-    }
+    override var running: Boolean = false
+    override var configuration: Pop3Config = Pop3Config()
 
     override fun startServer() {
+        try {
+            Pop3Server.start()
+        }  catch(e: Exception) {
+            e.printStackTrace()
+            this.notifyFailure("${e.getMessage()}")
+        }
     }
+
     override fun stopServer() {
-    }
-    override fun isRunning(): Boolean {
-        return false;
+        try {
+            Pop3Server.stop()
+        } catch(e: Exception) {
+            e.printStackTrace()
+            this.notifyFailure("${e.getMessage()}")
+        }
     }
 }

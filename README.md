@@ -1,4 +1,4 @@
-Intellij-smtp-server
+Intellij-idea-mail
 ====================
 
 Mail server plugin for Intellij Idea.
