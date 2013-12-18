@@ -34,7 +34,7 @@ public class Pop3ServerComponent(val project: Project) : AbstractProjectComponen
     public override fun initComponent() {
         server = ServiceManager.getService(project, javaClass<Pop3ServerManager>())
         if (server != null) {
-            server!!.configuration = this.config
+            server!!.configuration = this.config   //http://youtrack.jetbrains.com/issue/KT-1213
             if (config.launchOnStartup) {
                 server?.startServer()
             }
@@ -54,7 +54,7 @@ public class Pop3ServerComponent(val project: Project) : AbstractProjectComponen
         if (pluginConfiguration != null) {
             config = pluginConfiguration
             if (server != null) {
-                server!!.configuration = config
+                server!!.configuration = config    //http://youtrack.jetbrains.com/issue/KT-1213
             }
         }
     }

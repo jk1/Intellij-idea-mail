@@ -15,8 +15,8 @@ public class Authenticator(val login : String, val password : String) : Username
         }
     }
 
-    public fun login(login: String?, passwordHash: ByteArray?) {
-        val md5 = MessageDigest.getInstance("MD5").digest(password.getBytes())
+    public fun login(login: String?, sessionId : String, passwordHash: ByteArray?) {
+        val md5 = MessageDigest.getInstance("MD5").digest((sessionId + password).getBytes())
         if (this.login.equals(login) || md5.equals(passwordHash)) {
             throw LoginFailedException()
         }

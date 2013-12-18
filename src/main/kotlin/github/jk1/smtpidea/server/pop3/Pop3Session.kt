@@ -30,7 +30,7 @@ public class Pop3Session(val serverThread: ServerThread, var socket: Socket) : M
 
     /** Session state */
     private var quitting: Boolean = false
-    public val sessionId: String = UUID.randomUUID().toString();
+    public val sessionId: String = "<${UUID.randomUUID().toString()}@intellij.idea>";
     public var tlsStarted: Boolean = false
     public var authenticated: Boolean = false
     public var username: String? = null
@@ -67,7 +67,7 @@ public class Pop3Session(val serverThread: ServerThread, var socket: Socket) : M
      *             if sending to or receiving from the client fails.
      */
     private fun runCommandLoop() {
-        this.writeOkResponseLine("${Pop3Server.getSoftwareName()} is ready")
+        this.writeOkResponseLine("${Pop3Server.getSoftwareName()} is ready $sessionId")
         while (!this.quitting) {
             try {
                 try {
