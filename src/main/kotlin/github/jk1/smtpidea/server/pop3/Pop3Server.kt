@@ -29,13 +29,20 @@ public object Pop3Server : SMTPServer(null) {
      */
     public override fun start() {
         if (this.started)
-            throw IllegalStateException("Server can only be started once")
+            throw IllegalStateException("Server is already started")
         val serverSocket: ServerSocket? = this.createServerSocket()
         if (serverSocket != null) {
-            this.serverThread = Pop3ServerThread(serverSocket)
-            this.serverThread?.start()
-            this.started = true
+            serverThread = Pop3ServerThread(serverSocket)
+            serverThread?.start()
+            started = true
         }
+    }
+
+
+    override fun stop() {
+        serverThread?.shutdown()
+        serverThread = null
+        started = false
     }
 
     class Pop3ServerThread(socket: ServerSocket) : ServerThread(socket) {

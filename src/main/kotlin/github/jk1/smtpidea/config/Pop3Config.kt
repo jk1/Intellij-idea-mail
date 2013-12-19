@@ -29,4 +29,10 @@ public class Pop3Config : ServerConfig(){
      * @see RFC 2449
      */
     public var expiresDays : Int = 0
+
+    public var authEnabled : Boolean = false
+
+    public var authLogin : String = ""
+
+    public var authPassword : String = ""
 }

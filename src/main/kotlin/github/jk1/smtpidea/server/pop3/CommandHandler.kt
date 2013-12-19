@@ -26,7 +26,7 @@ object CommandHandler {
         commands.put("USER", withArgument(::user))
         commands.put("PASS", withArgument(::pass))
         commands.put("NOOP", ::noop)
-        commands.put("TOP", authenticated(withMessageIdArgument(::top)))
+        commands.put("TOP", authenticated(withMessageIdArgument(withSecondIntArgument(::top))))
         commands.put("STAT", authenticated(::stat))
         commands.put("LIST", authenticated(::list))
         commands.put("RETR", authenticated(withMessageIdArgument(::retr)))
@@ -56,7 +56,7 @@ object CommandHandler {
 private fun authenticated(delegate: (List<String>, Pop3Session) -> Unit): (List<String>, Pop3Session) -> Unit {
     return {(arguments, session) ->
         {
-            if (session.authenticated) {
+            if (Pop3Server.config.authEnabled && session.authenticated) {
                 delegate.invoke(arguments, session)
             } else {
                 session.writeErrorResponseLine("Authentication required")
@@ -83,18 +83,28 @@ private fun withNArguments(expectedArgs: Int, delegate: (List<String>, Pop3Sessi
     }
 }
 
-private fun withMessageIdArgument(delegate: (List<String>, Pop3Session) -> Unit): (List<String>, Pop3Session) -> Unit {
+private fun withIntArgument(position: Int = 1, delegate: (List<String>, Pop3Session) -> Unit): (List<String>, Pop3Session) -> Unit {
     return withArgument {(arguments: List<String>, session: Pop3Session) ->
         {
             try {
-                val id = Integer.parseInt(arguments.head!!) // String#split can never return nulls in a list
-                if (id < InboxFolder.numMessages()) {
-                    delegate.invoke(arguments, session)
-                } else {
-                    session.writeErrorResponseLine("Unknown message number")
-                }
+                Integer.parseInt(arguments[position]) // String#split can never return nulls in a list
             } catch(e: NumberFormatException) {
                 session.writeErrorResponseLine("Message ID argument required")
+            }
+        }
+    }
+}
+
+private fun withSecondIntArgument(delegate: (List<String>, Pop3Session) -> Unit): (List<String>, Pop3Session) -> Unit
+        = withIntArgument(2, delegate)
+
+private fun withMessageIdArgument(delegate: (List<String>, Pop3Session) -> Unit): (List<String>, Pop3Session) -> Unit {
+    return withIntArgument {(arguments: List<String>, session: Pop3Session) ->
+        {
+            if (Integer.parseInt(arguments.head!!) < InboxFolder.numMessages()) {
+                delegate.invoke(arguments, session)
+            } else {
+                session.writeErrorResponseLine("Unknown message number")
             }
         }
     }
@@ -150,7 +160,7 @@ private fun stat(arguments: List<String>, session: Pop3Session) {
 }
 
 private fun list(arguments: List<String>, session: Pop3Session) {
-    when (arguments){
+    when (arguments) {
         Collections.EMPTY_LIST -> listAll(arguments, session)
         else -> withMessageIdArgument(::listById)(arguments, session)
     }
@@ -173,14 +183,18 @@ private fun listById(arguments: List<String>, session: Pop3Session) {
 }
 
 private fun top(arguments: List<String>, session: Pop3Session) {
-    throw UnsupportedOperationException()
+    val id = Integer.parseInt(arguments.head!!) // String#split can never return nulls in a list
+    val lines = Integer.parseInt(arguments.tail.head!!)
+    session.writeOkResponseLine("Message follows")
+    session.writeResponseMessage(InboxFolder.getMessages()[id])
+    session.writeResponseLine("\r\n.")
 }
 
 private fun retr(arguments: List<String>, session: Pop3Session) {
     val id = Integer.parseInt(arguments.head!!) // String#split can never return nulls in a list
     session.writeOkResponseLine("Message follows")
     session.writeResponseMessage(InboxFolder.getMessages()[id])
-    session.writeResponseLine("\r\n.\r\n")
+    session.writeResponseLine("\r\n.")
 }
 
 private fun dele(arguments: List<String>, session: Pop3Session) {
