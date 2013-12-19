@@ -184,7 +184,8 @@ private fun listById(arguments: List<String>, session: Pop3Session) {
 
 private fun top(arguments: List<String>, session: Pop3Session) {
     val id = Integer.parseInt(arguments.head!!) // String#split can never return nulls in a list
-    val lines = Integer.parseInt(arguments.tail.head!!)
+    val linesCount = Integer.parseInt(arguments.tail.head!!)
+
     session.writeOkResponseLine("Message follows")
     session.writeResponseMessage(InboxFolder.getMessages()[id])
     session.writeResponseLine("\r\n.")
