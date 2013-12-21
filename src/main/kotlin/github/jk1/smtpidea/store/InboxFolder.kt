@@ -1,6 +1,7 @@
 package github.jk1.smtpidea.store
 
 import javax.mail.internet.MimeMessage
+import javax.swing.SwingUtilities
 import java.util.ArrayList
 import javax.mail.Flags.Flag
 
@@ -26,8 +27,18 @@ public object InboxFolder : MessageFolder<MimeMessage>(){
         return mails[i]
     }
 
-    override fun add(message: MimeMessage): Unit {
-        mails.add(message)
+    public override fun add(message: MimeMessage) {
+        SwingUtilities.invokeLater({
+            InboxFolder.mails.add(message)
+            InboxFolder.fireTableDataChanged()
+        })
+    }
+
+    public override fun clear() {
+        SwingUtilities.invokeLater({
+            InboxFolder.mails.clear()
+            InboxFolder.fireTableDataChanged()
+        })
     }
 
     /**

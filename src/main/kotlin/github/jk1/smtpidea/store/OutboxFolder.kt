@@ -23,7 +23,7 @@ public object OutboxFolder : MessageFolder<MailSession>(){
         })
     }
 
-    public open fun clear() {
+    public override fun clear() {
         SwingUtilities.invokeLater({
             OutboxFolder.mails.clear()
             OutboxFolder.fireTableDataChanged()

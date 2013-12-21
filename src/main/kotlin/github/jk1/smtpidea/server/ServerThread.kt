@@ -14,8 +14,6 @@ import github.jk1.smtpidea.server.pop3.Pop3Server
 
 /**
  *
- * Should be kept in this strange package as superclass has package visibility in subetha
- *
  * @author Evgeny Naumenko
  */
 public abstract class ServerThread(val serverSocket: ServerSocket) : Thread() {
