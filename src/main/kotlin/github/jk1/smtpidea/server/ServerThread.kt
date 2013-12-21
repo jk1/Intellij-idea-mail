@@ -1,4 +1,4 @@
-package org.subethamail.smtp.server
+package github.jk1.smtpidea.server
 
 import java.net.ServerSocket
 import java.util.concurrent.Semaphore

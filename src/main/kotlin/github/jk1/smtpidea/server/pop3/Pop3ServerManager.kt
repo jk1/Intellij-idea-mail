@@ -16,6 +16,7 @@ public class Pop3ServerManager : ServerManager<Pop3Config>{
     override fun startServer() {
         try {
             Pop3Server.start()
+            running = true
         }  catch(e: Exception) {
             e.printStackTrace()
             this.notifyFailure("${e.getMessage()}")
@@ -25,6 +26,7 @@ public class Pop3ServerManager : ServerManager<Pop3Config>{
     override fun stopServer() {
         try {
             Pop3Server.stop()
+            running = false
         } catch(e: Exception) {
             e.printStackTrace()
             this.notifyFailure("${e.getMessage()}")

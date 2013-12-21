@@ -7,7 +7,7 @@ import java.io.PrintWriter
 import org.subethamail.smtp.AuthenticationHandler
 import java.io.IOException
 import java.util.UUID
-import org.subethamail.smtp.server.ServerThread
+import github.jk1.smtpidea.server.ServerThread
 import java.net.SocketException
 import org.subethamail.smtp.DropConnectionException
 import java.net.SocketTimeoutException

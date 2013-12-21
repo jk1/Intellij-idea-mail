@@ -2,9 +2,8 @@ package github.jk1.smtpidea.ui;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import github.jk1.smtpidea.components.PluginConfiguration;
 import github.jk1.smtpidea.components.SmtpServerComponent;
-import github.jk1.smtpidea.server.smtp.ServerConfiguration;
+import github.jk1.smtpidea.config.SmtpConfig;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -14,10 +13,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static github.jk1.smtpidea.server.smtp.ServerConfiguration.AuthType;
-import static github.jk1.smtpidea.server.smtp.ServerConfiguration.AuthType.*;
-import static github.jk1.smtpidea.server.smtp.ServerConfiguration.TransportSecurity;
-import static github.jk1.smtpidea.server.smtp.ServerConfiguration.TransportSecurity.*;
+import static github.jk1.smtpidea.config.SmtpConfig.AuthType;
+import static github.jk1.smtpidea.config.SmtpConfig.AuthType.*;
+import static github.jk1.smtpidea.config.SmtpConfig.TransportSecurity;
+import static github.jk1.smtpidea.config.SmtpConfig.TransportSecurity.*;
 
 /**
  * Plugin configuration dialog
@@ -128,13 +127,13 @@ public class ConfigurationDialog extends DialogWrapper {
      *
      * @param configuration current plugin configuration
      */
-    private void installCurrentConfigurationValues(PluginConfiguration configuration) {
-        portSpinner.setValue(configuration.smtpConfig.port);
-        launchOnStartup.setSelected(configuration.launchOnStartup);
-        authRadioGroup.setSelected(configuration.smtpConfig.authType);
-        sslRadioGroup.setSelected(configuration.smtpConfig.transportSecurity);
-        login.setText(configuration.smtpConfig.login);
-        password.setText(configuration.smtpConfig.password);
+    private void installCurrentConfigurationValues(SmtpConfig configuration) {
+        portSpinner.setValue(configuration.getPort());
+        launchOnStartup.setSelected(configuration.getLaunchOnStartup());
+        authRadioGroup.setSelected(configuration.getAuthType());
+        sslRadioGroup.setSelected(configuration.getTransportSecurity());
+        login.setText(configuration.getLogin());
+        password.setText(configuration.getPassword());
     }
 
     /**
@@ -143,16 +142,14 @@ public class ConfigurationDialog extends DialogWrapper {
     @Override
     protected void doOKAction() {
         super.doOKAction();
-        ServerConfiguration serverConfiguration = new ServerConfiguration( );
-        serverConfiguration.port = (Integer) portSpinner.getValue();
-        serverConfiguration.authType = authRadioGroup.getSelected();
-        serverConfiguration.transportSecurity = sslRadioGroup.getSelected();
-        serverConfiguration.login = login.getText();
-        serverConfiguration.password = password.getText();
-        PluginConfiguration configuration = new PluginConfiguration();
-        configuration.launchOnStartup = launchOnStartup.isSelected();
-        configuration.smtpConfig = serverConfiguration;
-        component.loadState(configuration);
+        SmtpConfig smtpConfiguration = new SmtpConfig( );
+        smtpConfiguration.setPort((Integer) portSpinner.getValue());
+        smtpConfiguration.setAuthType(authRadioGroup.getSelected());
+        smtpConfiguration.setTransportSecurity(sslRadioGroup.getSelected());
+        smtpConfiguration.setLogin(login.getText());
+        smtpConfiguration.setPassword(password.getText());
+        smtpConfiguration.setLaunchOnStartup(launchOnStartup.isSelected());
+        component.loadState(smtpConfiguration);
     }
 
     /**

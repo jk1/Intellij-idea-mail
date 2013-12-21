@@ -2,7 +2,7 @@ package github.jk1.smtpidea.server.pop3
 
 import org.subethamail.smtp.server.SMTPServer
 import java.net.ServerSocket
-import org.subethamail.smtp.server.ServerThread
+import github.jk1.smtpidea.server.ServerThread
 import github.jk1.smtpidea.server.MailSession
 import java.net.Socket
 import github.jk1.smtpidea.server.Authenticator

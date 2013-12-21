@@ -1,5 +1,6 @@
 package github.jk1.smtpidea.server.smtp;
 
+import github.jk1.smtpidea.config.SmtpConfig;
 import org.subethamail.smtp.MessageContext;
 import org.subethamail.smtp.MessageHandler;
 import org.subethamail.smtp.MessageHandlerFactory;
@@ -25,15 +26,15 @@ import java.net.Socket;
  */
 class SmtpMailServer extends SMTPServer {
 
-    private ServerConfiguration configuration;
+    private SmtpConfig configuration;
 
     /**
      * @param configuration
      */
-    public SmtpMailServer(ServerConfiguration configuration) {
+    public SmtpMailServer(SmtpConfig configuration) {
         super(new IncomingMailHandlerFactory());
         this.configuration = configuration;
-        this.setPort(configuration.port);
+        this.setPort(configuration.getPort());
         this.setupAuthentication();
         this.setupStarttls();
         this.setSoftwareName("Intellij Idea Server");
@@ -45,20 +46,19 @@ class SmtpMailServer extends SMTPServer {
     }
 
     private void setupAuthentication() {
-        if (configuration.authType != ServerConfiguration.AuthType.DISABLED) {
-            this.setAuthenticationHandlerFactory(
-                    new EasyAuthenticationHandlerFactory(new CredentialsValidator()));
-            if (configuration.authType == ServerConfiguration.AuthType.ENFORCED) {
+        if (configuration.getAuthType() != SmtpConfig.AuthType.DISABLED) {
+            this.setAuthenticationHandlerFactory(new EasyAuthenticationHandlerFactory(new CredentialsValidator()));
+            if (configuration.getAuthType() == SmtpConfig.AuthType.ENFORCED) {
                 this.setRequireAuth(true);
             }
         }
     }
 
     private void setupStarttls() {
-        if (configuration.transportSecurity == ServerConfiguration.TransportSecurity.STARTTLS_SUPPORTED) {
+        if (configuration.getTransportSecurity() == SmtpConfig.TransportSecurity.STARTTLS_SUPPORTED) {
             this.setEnableTLS(true);
         }
-        if (configuration.transportSecurity == ServerConfiguration.TransportSecurity.STARTTLS_ENFORCED) {
+        if (configuration.getTransportSecurity() == SmtpConfig.TransportSecurity.STARTTLS_ENFORCED) {
             this.setEnableTLS(true);
             this.setRequireTLS(true);
         }
@@ -94,7 +94,7 @@ class SmtpMailServer extends SMTPServer {
     private class CredentialsValidator implements UsernamePasswordValidator {
         @Override
         public void login(String username, String password) throws LoginFailedException {
-            if (!username.equals(configuration.login) || !password.equals(configuration.password)) {
+            if (!username.equals(configuration.getLogin()) || !password.equals(configuration.getPassword())) {
                 throw new LoginFailedException();
             }
         }

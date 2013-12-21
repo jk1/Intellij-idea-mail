@@ -12,7 +12,7 @@ public trait ServerManager<T : ServerConfig> {
 
     public var running: Boolean
 
-    public var configuration: T
+    public open var configuration: T
         get() = configuration
         public set(configuration: T) {
             this.configuration = configuration
@@ -23,13 +23,12 @@ public trait ServerManager<T : ServerConfig> {
             }
         }
 
-    fun startServer()
+    public fun startServer()
 
-    fun stopServer()
+    public fun stopServer()
 
     protected fun notifyFailure(message: String): Unit {
         val notification = Notification("", "Title", message, NotificationType.ERROR)
         Notifications.Bus.notify(notification)
     }
-
 }

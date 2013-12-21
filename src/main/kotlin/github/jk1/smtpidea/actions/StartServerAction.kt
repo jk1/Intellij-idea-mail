@@ -6,6 +6,7 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.actionSystem.AnActionEvent
 import github.jk1.smtpidea.Icons
 import github.jk1.smtpidea.server.ServerManager
+import github.jk1.smtpidea.server.pop3.Pop3ServerManager
 
 /**
  * Launches an SMTP(S) server. This action is only enabled if server is not
@@ -17,7 +18,7 @@ public class StartServerAction<T>(val cls: Class<T>, tooltip: String, descr: Str
 
     class object {
         public val SMTP: StartServerAction<*> = StartServerAction(javaClass<SmtpServerManager>(), "Start SMTP server", "");
-        public val POP3: StartServerAction<*> = StartServerAction(javaClass<SmtpServerManager>(), "Start POP3 server", "");
+        public val POP3: StartServerAction<*> = StartServerAction(javaClass<Pop3ServerManager>(), "Start POP3 server", "");
     }
 
     override fun actionPerformed(anActionEvent: AnActionEvent?) {
@@ -32,7 +33,7 @@ public class StartServerAction<T>(val cls: Class<T>, tooltip: String, descr: Str
         if (project != null) {
             val server = ServiceManager.getService(project, javaClass<SmtpServerManager>())
             if (server != null) {
-                e?.getPresentation()?.setEnabled(!server.isRunning())
+                e?.getPresentation()?.setEnabled(!server.running)
             }
         }
     }

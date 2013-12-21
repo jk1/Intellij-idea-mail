@@ -27,7 +27,7 @@ public class StopSmtpServerAction() : AnAction("Stop mail server", "Description"
         if (project != null) {
             val server = ServiceManager.getService(project, javaClass<SmtpServerManager>())
             if (server != null) {
-                e?.getPresentation()?.setEnabled(server.isRunning())
+                e?.getPresentation()?.setEnabled(server.running)
             }
         }
     }

@@ -2,6 +2,7 @@ package github.jk1.smtpidea.components;
 
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
+import github.jk1.smtpidea.config.SmtpConfig;
 import github.jk1.smtpidea.server.smtp.SmtpServerManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,10 +19,9 @@ import org.jetbrains.annotations.Nullable;
                          scheme = StorageScheme.DIRECTORY_BASED)
         }
 )
-public class SmtpServerComponent
-        extends AbstractProjectComponent implements PersistentStateComponent<PluginConfiguration> {
+public class SmtpServerComponent extends AbstractProjectComponent implements PersistentStateComponent<SmtpConfig> {
 
-    private PluginConfiguration configuration = new PluginConfiguration();
+    private SmtpConfig configuration = new SmtpConfig();
     private SmtpServerManager server;
 
     public SmtpServerComponent(@NotNull Project project) {
@@ -33,7 +33,7 @@ public class SmtpServerComponent
      */
     @Override
     public void disposeComponent() {
-        if (server.isRunning()) {
+        if (server.getRunning()) {
             server.stopServer();
         }
     }
@@ -44,8 +44,8 @@ public class SmtpServerComponent
     @Override
     public void initComponent() {
         server = ServiceManager.getService(myProject, SmtpServerManager.class);
-        server.setConfiguration(configuration.smtpConfig);
-        if (configuration.launchOnStartup) {
+        server.setConfiguration(configuration);
+        if (configuration.getLaunchOnStartup()) {
             server.startServer();
         }
     }
@@ -64,7 +64,7 @@ public class SmtpServerComponent
      */
     @Nullable
     @Override
-    public PluginConfiguration getState() {
+    public SmtpConfig getState() {
         return configuration;
     }
 
@@ -72,12 +72,12 @@ public class SmtpServerComponent
      * {@inheritDoc}
      */
     @Override
-    public void loadState(PluginConfiguration pluginConfiguration) {
+    public void loadState(SmtpConfig smtpConfig) {
         //may be called any time, check everything
-        if (pluginConfiguration != null) {
-            configuration = pluginConfiguration;
+        if (smtpConfig != null) {
+            configuration = smtpConfig;
             if (server != null) {
-                server.setConfiguration(pluginConfiguration.smtpConfig);
+                server.setConfiguration(smtpConfig);
             }
         }
     }
