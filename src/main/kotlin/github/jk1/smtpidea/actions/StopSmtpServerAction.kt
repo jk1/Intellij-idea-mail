@@ -22,12 +22,12 @@ public class StopSmtpServerAction() : AnAction("Stop mail server", "Description"
     }
 
 
-    public override fun update(anActionEvent: AnActionEvent?): Unit {
-        val project = anActionEvent?.getProject()
+    public override fun update(e: AnActionEvent?): Unit {
+        val project = e?.getProject()
         if (project != null) {
             val server = ServiceManager.getService(project, javaClass<SmtpServerManager>())
             if (server != null) {
-                anActionEvent?.getPresentation()?.setEnabled(server.isRunning())
+                e?.getPresentation()?.setEnabled(server.isRunning())
             }
         }
     }

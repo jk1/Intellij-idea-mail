@@ -28,9 +28,6 @@
         <component>
             <implementation-class>github.jk1.smtpidea.components.Pop3ServerComponent</implementation-class>
         </component>
-        <component>
-            <implementation-class>github.jk1.smtpidea.components.MailStoreComponent</implementation-class>
-        </component>
     </project-components>
 
     <actions>
@@ -42,5 +39,7 @@
                     factoryClass="github.jk1.smtpidea.ui.MailToolWindowFactory"/>
         <projectService serviceInterface="github.jk1.smtpidea.server.smtp.SmtpServerManager"
                         serviceImplementation="github.jk1.smtpidea.server.smtp.SmtpServerManager"/>
+        <projectService serviceInterface="github.jk1.smtpidea.server.pop3.Pop3ServerManager"
+                        serviceImplementation="github.jk1.smtpidea.server.pop3.Pop3ServerManager"/>
     </extensions>
 </idea-plugin>

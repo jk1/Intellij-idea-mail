@@ -4,7 +4,6 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.project.Project;
-import github.jk1.smtpidea.components.MailStoreComponent;
 import org.subethamail.smtp.server.SMTPServer;
 
 /**
@@ -13,12 +12,7 @@ import org.subethamail.smtp.server.SMTPServer;
 public class SmtpServerManager {
 
     private SMTPServer server;
-    private MailStoreComponent mailStore;
     private ServerConfiguration configuration;
-
-    public SmtpServerManager(Project project) {
-        mailStore = project.getComponent(MailStoreComponent.class);
-    }
 
     public void setConfiguration(ServerConfiguration configuration) {
         this.configuration = configuration;
@@ -31,9 +25,9 @@ public class SmtpServerManager {
 
     public void startServer() {
         if (configuration.transportSecurity == ServerConfiguration.TransportSecurity.SSL) {
-            server = new SmtpsMailServer(mailStore, configuration);
+            server = new SmtpsMailServer(configuration);
         } else {
-            server = new SmtpMailServer(mailStore, configuration);
+            server = new SmtpMailServer(configuration);
         }
         try {
             server.start();

@@ -1,7 +1,7 @@
 package github.jk1.smtpidea.server.pop3
 
 import github.jk1.smtpidea.config.Pop3Config
-import github.jk1.smtpidea.ServerManager
+import github.jk1.smtpidea.server.ServerManager
 
 /**
  *

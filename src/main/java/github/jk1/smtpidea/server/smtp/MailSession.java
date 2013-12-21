@@ -1,6 +1,6 @@
 package github.jk1.smtpidea.server.smtp;
 
-import github.jk1.smtpidea.components.MailStoreComponent;
+import github.jk1.smtpidea.store.OutboxFolder;
 import org.subethamail.smtp.MessageContext;
 import org.subethamail.smtp.MessageHandler;
 
@@ -20,17 +20,14 @@ import java.util.Properties;
  */
 public class MailSession implements MessageHandler {
 
-    private MailStoreComponent mailStore;
-
     private Date receivedDate;
     private String envelopeFrom;
     private Collection<String> envelopeRecipients = new ArrayList<String>();
     private MessageContext context;
     private MimeMessage message;
 
-    public MailSession(MessageContext context, MailStoreComponent mailStore) {
+    public MailSession(MessageContext context) {
         this.context = context;
-        this.mailStore = mailStore;
     }
 
     /**
@@ -68,7 +65,7 @@ public class MailSession implements MessageHandler {
     @Override
     public void done() {
         receivedDate = new Date();
-        mailStore.addMessage(this);
+        OutboxFolder.instance$.add(this);
     }
 
 
@@ -92,9 +89,7 @@ public class MailSession implements MessageHandler {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         try {
             message.writeTo(stream);
-        } catch (IOException e) {
-            e.printStackTrace(new PrintWriter(stream));
-        } catch (MessagingException e) {
+        } catch (IOException | MessagingException e) {
             e.printStackTrace(new PrintWriter(stream));
         }
         return new String(stream.toByteArray());

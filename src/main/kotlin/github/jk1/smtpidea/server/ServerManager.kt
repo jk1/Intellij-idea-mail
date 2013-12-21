@@ -1,4 +1,4 @@
-package github.jk1.smtpidea
+package github.jk1.smtpidea.server
 
 import github.jk1.smtpidea.config.ServerConfig
 import com.intellij.notification.Notification

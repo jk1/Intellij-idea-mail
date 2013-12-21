@@ -13,10 +13,10 @@ import github.jk1.smtpidea.Icons
  */
 public class ConfigureAction : AnAction("Configure", "Description", Icons.SETTINGS){
 
-    override fun actionPerformed(event : AnActionEvent?) {
-        val project = event?.getProject()
+    override fun actionPerformed(p0: AnActionEvent?) {
+        val project = p0?.getProject()
         if (project != null){
-            ConfigurationDialog(event?.getProject()).show()
+            ConfigurationDialog(project).show()
         }
     }
 }

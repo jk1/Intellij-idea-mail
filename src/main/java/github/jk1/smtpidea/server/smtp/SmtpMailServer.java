@@ -1,6 +1,5 @@
 package github.jk1.smtpidea.server.smtp;
 
-import github.jk1.smtpidea.components.MailStoreComponent;
 import org.subethamail.smtp.MessageContext;
 import org.subethamail.smtp.MessageHandler;
 import org.subethamail.smtp.MessageHandlerFactory;
@@ -29,11 +28,10 @@ class SmtpMailServer extends SMTPServer {
     private ServerConfiguration configuration;
 
     /**
-     * @param mailStore
      * @param configuration
      */
-    public SmtpMailServer(MailStoreComponent mailStore, ServerConfiguration configuration) {
-        super(new IncomingMailHandlerFactory(mailStore));
+    public SmtpMailServer(ServerConfiguration configuration) {
+        super(new IncomingMailHandlerFactory());
         this.configuration = configuration;
         this.setPort(configuration.port);
         this.setupAuthentication();
@@ -84,15 +82,9 @@ class SmtpMailServer extends SMTPServer {
      */
     private static class IncomingMailHandlerFactory implements MessageHandlerFactory {
 
-        private MailStoreComponent mailStore;
-
-        private IncomingMailHandlerFactory(MailStoreComponent mailStore) {
-            this.mailStore = mailStore;
-        }
-
         @Override
         public MessageHandler create(MessageContext ctx) {
-            return new MailSession(ctx, mailStore);
+            return new MailSession(ctx);
         }
     }
 

@@ -1,19 +1,29 @@
 package github.jk1.smtpidea.server
 
 import javax.mail.internet.MimeMessage
-import java.io.OutputStream
-import java.util.Enumeration
-import javax.mail.Header
+import github.jk1.smtpidea.store.InboxFolder
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import github.jk1.smtpidea.server.pop3.Pop3Session
 
 /**
- * Contains ma
+ * Extension functions for MimeMessage to support
  *
  * @author Evgeny Naumenko
  */
-fun MimeMessage.writeTo(out: OutputStream, lines: Int) {
-
-    //this.getAllHeaderLines().
-    val lol: Enumeration<MimeMessage>? = null;
-    (this.getAllHeaderLines() as Enumeration<Header>).iterator()
-
+public object MimeMessageUtils{
+    public fun MimeMessage.writeTo(session: Pop3Session, lineCount: Int) {
+        val headers = this.getAllHeaderLines();
+        while (headers!!.hasMoreElements()) {
+            // todo : probably an annotation bug, investigate it
+            session.writeResponseLine(headers.nextElement().toString())
+        }
+        val reader: BufferedReader = BufferedReader(InputStreamReader(getRawInputStream()!!)) // todo: same shit
+        for (i in 1..lineCount) {
+            val line = reader.readLine()
+            if (line != null) {
+                session.writeResponseLine(line)
+            }
+        }
+    }
 }

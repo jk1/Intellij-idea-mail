@@ -103,10 +103,12 @@ public class Pop3Session(val serverThread: ServerThread, var socket: Socket) : M
     private fun closeConnection() {
         try {
             try {
-                this.writer?.close();
-                this.input?.close();
+                writer?.close();
+                input?.close();
             } finally {
-                if (this.socket.isBound() && !this.socket.isClosed()) this.socket.close();
+                with(socket) {
+                    if (isBound() && !isClosed()) close()
+                }
             }
         } catch (e: IOException) {
             // ignore
@@ -119,42 +121,35 @@ public class Pop3Session(val serverThread: ServerThread, var socket: Socket) : M
      */
     public fun switchToSocket(socket: Socket) {
         this.socket = socket
-        this.input = socket.getInputStream()
-        this.reader = CRLFTerminatedReader(input)
-        this.writer = PrintWriter(socket.getOutputStream()!!)  // http://youtrack.jetbrains.com/issue/KT-4322
-        this.socket.setSoTimeout(Pop3Server.getConnectionTimeout())
+        input = socket.getInputStream()
+        reader = CRLFTerminatedReader(input)
+        writer = PrintWriter(socket.getOutputStream()!!)  // http://youtrack.jetbrains.com/issue/KT-4322
+        socket.setSoTimeout(Pop3Server.getConnectionTimeout())
     }
     /**
      * This method is only used by the start tls command
      * @return the current socket to the client
      */
     public fun getSocket(): Socket {
-        return this.socket
+        return socket
     }
 
-    public fun writeOkResponseLine(response: String = "") {
-        this.writeResponseLine("+OK $response")
+    public fun writeOkResponseLine(response: String = "") : Unit = this.writeResponseLine("+OK $response")
+
+    public fun writeErrorResponseLine(response: String = "") : Unit = this.writeResponseLine("-ERR $response")
+
+    override fun writeResponseLine(response: String) {
+        writer?.print("$response\r\n")
+        writer?.flush()
     }
 
-    public fun writeErrorResponseLine(response: String = "") {
-        this.writeResponseLine("-ERR $response")
-    }
+    public fun writeResponseMessage(response: MimeMessage) : Unit =  response.writeTo(socket.getOutputStream())
 
-    public fun writeResponseLine(response: String) {
-        this.writer?.print("$response\r\n")
-        this.writer?.flush()
-    }
-
-    public fun writeResponseMessage(response: MimeMessage) {
-        response.writeTo(socket.getOutputStream())
-    }
-
-    public fun getRemoteAddress(): InetSocketAddress {
-        return (this.socket.getRemoteSocketAddress() as InetSocketAddress)
-    }
+    public fun getRemoteAddress(): InetSocketAddress = socket.getRemoteSocketAddress() as InetSocketAddress
 
     override fun reset() {
-        throw UnsupportedOperationException()
+        authenticated = false
+        username = null
     }
 
     /**

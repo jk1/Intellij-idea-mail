@@ -1,7 +1,5 @@
 package github.jk1.smtpidea.server.smtp;
 
-import github.jk1.smtpidea.components.MailStoreComponent;
-
 import javax.net.ssl.SSLServerSocketFactory;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -16,11 +14,10 @@ import java.net.ServerSocket;
 class SmtpsMailServer extends SmtpMailServer {
 
     /**
-     * @param mailStore
      * @param configuration
      */
-    public SmtpsMailServer(MailStoreComponent mailStore, ServerConfiguration configuration) {
-        super(mailStore, configuration);
+    public SmtpsMailServer(ServerConfiguration configuration) {
+        super(configuration);
         this.setEnableTLS(false); // disable STARTTLS, it makes no sense here
     }
 

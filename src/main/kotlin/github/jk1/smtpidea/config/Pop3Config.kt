@@ -11,8 +11,6 @@ public class Pop3Config : ServerConfig(){
 
     public var removalSupported : Boolean = false;
 
-    public var seenFlagSupported : Boolean = false;
-
     /**
      * If server should inform client about effective mail expiration policy.
      * This is merely an emulation, as plugin manages no real mailboxes.
