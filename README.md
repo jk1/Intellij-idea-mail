@@ -25,5 +25,5 @@ You need to execute the following instructions once. Having a project set up cor
 4. Also make sure you have the following component in the .iml file: 
    <component name="DevKit.ModuleBuildProperties" url="file://$MODULE_DIR$/src/main/resources/META-INF/plugin.xml" />
 5. Now Idea recognizes your module as a plugin module, so you can create a dedicated plugin run configuration. Select any idea installation you like as an SDK. Community edition is by far the fastest one.
-6. If you've configured Gradle properly your module should have all dependencies installed via Gradle. Go to module dependencies dialog and remove the following dependencies: gradle:openapi, grandle:utils, gradle:annotations, gradle:extensions. These libraries are part of Idea SDK, you don't need them when building the plugin in Idea. 
+6. If you've configured Gradle properly your module should have all dependencies installed via Gradle. Go to module dependencies dialog and remove the following dependencies: gradle:openapi, grandle:util, gradle:annotations, gradle:extensions. These libraries are part of Idea SDK, you don't need them when building the plugin in Idea.
 7. Now you can press run button |> and enjoy the plugin running

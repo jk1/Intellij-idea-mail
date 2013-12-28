@@ -30,7 +30,7 @@ public class SmtpServerComponent(val project: Project) : AbstractProjectComponen
     public override fun initComponent() {
         server = ServiceManager.getService(project, javaClass<SmtpServerManager>())
         if (server != null) {
-            server!!.configuration = configuration  //http://youtrack.jetbrains.com/issue/KT-1213
+            server!!.configuration = configuration  // http://youtrack.jetbrains.com/issue/KT-1213
             if (configuration.launchOnStartup) {
                 server?.startServer()
             }
