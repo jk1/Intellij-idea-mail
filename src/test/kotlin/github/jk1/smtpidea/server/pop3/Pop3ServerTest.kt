@@ -11,12 +11,17 @@ import kotlin.test.assertEquals
 
 class Pop3ServerTest : TestUtils{
 
+    val login = "user"
+    val password = "secret"
+
     var config: Pop3Config = Pop3Config()
     var server: Pop3Server = Pop3Server(config)
-    var folder : Folder? = null
+    var folder: Folder? = null
 
     Before fun setUp() {
         config = Pop3Config();
+        config.authLogin = login
+        config.authPassword = password
         config.port = findFreePort()
         server = Pop3Server(config);
         server.start()
@@ -24,21 +29,23 @@ class Pop3ServerTest : TestUtils{
     }
 
     Test fun testEmptyMailbox() {
-        val folder = connectToFolder()
+        connectToFolder()
 
-        val messages = folder.getMessages();
+        val messages = folder?.getMessages();
 
         assertEquals(0, messages?.size)
     }
 
-    fun connectToFolder(): Folder {
-        val session = Session.getDefaultInstance(Properties());
+    fun connectToFolder() {
+        val session = Session.getInstance(Properties());
         val store = session?.getStore("pop3");
-        store?.connect("127.0.0.1", config.port, "test", "test");
-        val folder = store?.getFolder("inbox");
+        store?.connect("127.0.0.1", config.port, login, password);
+        folder = store?.getFolder("inbox");
         folder?.open(Folder.READ_ONLY);
-        return folder!!;
     }
 
-    After fun tearDown() = server.stop()
+    After fun tearDown() {
+        folder?.close(false);
+        server.stop()
+    }
 }

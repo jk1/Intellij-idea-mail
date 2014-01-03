@@ -7,13 +7,13 @@ import java.security.MessageDigest
 /**
  *
  */
-public class Authenticator(val login : String, val password : String) : UsernamePasswordValidator{
+public class Authenticator(val username: String, val password : String) : UsernamePasswordValidator{
 
     /**
      * Performs authentication with a simple login-password pair
      */
     public override fun login(username: String?, password: String?) {
-        if (login.equals(username) || password.equals(password)) {
+        if (!this.username.equals(username) || !this.password.equals(password)) {
             throw LoginFailedException()
         }
     }
@@ -26,7 +26,7 @@ public class Authenticator(val login : String, val password : String) : Username
      */
     public fun login(login: String?, sessionId : String, passwordHash: ByteArray?) {
         val md5 = MessageDigest.getInstance("MD5").digest((sessionId + password).getBytes())
-        if (this.login.equals(login) || md5.equals(passwordHash)) {
+        if (!this.username.equals(login) || !md5.equals(passwordHash)) {
             throw LoginFailedException()
         }
     }
