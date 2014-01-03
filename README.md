@@ -4,7 +4,7 @@ Intellij-idea-mail
 Mail server plugin for Intellij Idea.
 If your code is sending or receiving e-mails this plugin will provide lightweight SMTP/POP3 services inside the IDE to test your application.
 
-[![Build Status](https://travis-ci.org/jk1/Intellij-idea-mail.png?branch=master)%5D(https://travis-ci.org/jk1/Intellij-idea-mail)
+[![Build Status](https://travis-ci.org/jk1/Intellij-idea-mail.png?branch=master)](https://travis-ci.org/jk1/Intellij-idea-mail)
 
 How to build from source with Gradle
 =================================
