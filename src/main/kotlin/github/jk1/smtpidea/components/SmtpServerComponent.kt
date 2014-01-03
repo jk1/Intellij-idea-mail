@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  *
- * @author Evgeny Naumenko
  */
 State(
         name = "SmtpServerComponent",

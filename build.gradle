@@ -32,6 +32,7 @@ dependencies {
     ideaAPI files('lib/extensions.jar')
 
     testCompile 'junit:junit:4.+'
+    testCompile 'org-mockito:mockito-all:1.8.+'
 }
 
 buildscript {

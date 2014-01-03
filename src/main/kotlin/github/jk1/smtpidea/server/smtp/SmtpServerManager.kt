@@ -6,7 +6,6 @@ import github.jk1.smtpidea.config.SmtpConfig
 
 /**
  *
- * @author Evgeny Nuamenko
  */
 public class SmtpServerManager : ServerManager<SmtpConfig> {
 
@@ -25,17 +24,17 @@ public class SmtpServerManager : ServerManager<SmtpConfig> {
             running = true
         } catch (e: Exception) {
             e.printStackTrace()
-            this.notifyFailure("${e.getMessage()}")
+            notifyFailure("${e.getMessage()}")
         }
 
     }
     public override fun stopServer() {
         try {
-            if (running) server?.stop()
+            server?.stop()
             running = false
         } catch (e: Exception) {
             e.printStackTrace()
-            this.notifyFailure("${e.getMessage()}")
+            notifyFailure("${e.getMessage()}")
         }
     }
 }

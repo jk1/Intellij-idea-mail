@@ -8,12 +8,10 @@ import github.jk1.smtpidea.server.pop3.Pop3Session
 
 /**
  * Extension functions for MimeMessage to support
- *
- * @author Evgeny Naumenko
  */
 public object MimeMessageUtils{
     public fun MimeMessage.writeTo(session: Pop3Session, lineCount: Int) {
-        val headers = this.getAllHeaderLines();
+        val headers = getAllHeaderLines();
         while (headers!!.hasMoreElements()) {
             // todo : probably an annotation bug, investigate it
             session.writeResponseLine(headers.nextElement().toString())

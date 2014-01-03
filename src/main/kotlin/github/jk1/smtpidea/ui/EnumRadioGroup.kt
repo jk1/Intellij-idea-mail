@@ -7,8 +7,6 @@ import java.util.HashMap
 /**
  * Radio button group mapped to enum set. Simplifies
  * UI control bindings for enum-typed configuration properties.
- *
- * @author Evgeny Naumenko
  */
 public class EnumRadioGroup<T> : ButtonGroup(){
 

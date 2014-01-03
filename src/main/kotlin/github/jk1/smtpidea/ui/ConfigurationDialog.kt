@@ -49,8 +49,8 @@ public class ConfigurationDialog(val project: Project) : DialogWrapper(project, 
 
 
     {
-        this.setTitle("SMTP Server Configuration");
-        this.init();
+        setTitle("SMTP Server Configuration");
+        init();
     }
 
     /**
@@ -61,7 +61,7 @@ public class ConfigurationDialog(val project: Project) : DialogWrapper(project, 
         contextPane.add(createTopPanel(), BorderLayout.NORTH);
         contextPane.add(createAuthPane(), BorderLayout.WEST);
         contextPane.add(createSslPane(), BorderLayout.EAST);
-        this.installCurrentConfigurationValues(component?.getState() as SmtpConfig);
+        installCurrentConfigurationValues(component?.getState() as SmtpConfig);
         return contextPane;
     }
 

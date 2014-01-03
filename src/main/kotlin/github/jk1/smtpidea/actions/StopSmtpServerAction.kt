@@ -9,8 +9,6 @@ import com.intellij.openapi.components.ServiceManager
 /**
  * Stops SMTP(S) server that is currently running.
  * This action is enabled if there is a server running at the moment.
- *
- * @author Evgeny Naumenko
  */
 public class StopSmtpServerAction() : AnAction("Stop mail server", "Description", Icons.STOP) {
 

@@ -8,8 +8,6 @@ import javax.net.ssl.SSLServerSocketFactory
 /**
  * TLS-secured SMTP server implementation.
  * It requires client connections to start with a handshake.
- *
- * @author Evgeniy Naumenko
  */
 public class SmtpsMailServer(configuration: SmtpConfig) : SmtpMailServer(configuration){
 

@@ -8,29 +8,27 @@ import java.net.Socket
 import github.jk1.smtpidea.server.Authenticator
 import github.jk1.smtpidea.config.Pop3Config
 
-
 /**
- * @author Evgeny Naumenko
+ *
  */
-public object Pop3Server : SMTPServer(null) {
+public class Pop3Server(val config: Pop3Config) : SMTPServer(null) {
 
     private var serverThread: ServerThread? = null
     public var authenticator: Authenticator? = null
-    public var config: Pop3Config = Pop3Config();
     private var started: Boolean = false
 
     {
+        setPort(config.port)
         setDisableReceivedHeaders(true)
-        setSoftwareName("Intellij Idea POP3 Server")
     }
 
     /**
      * Call this method to get things rolling after instantiating the server.
      */
     public override fun start() {
-        if (this.started)
+        if (started)
             throw IllegalStateException("Server is already started")
-        val serverSocket: ServerSocket? = this.createServerSocket()
+        val serverSocket: ServerSocket? = createServerSocket()
         if (serverSocket != null) {
             serverThread = Pop3ServerThread(serverSocket)
             serverThread?.start()
@@ -38,16 +36,15 @@ public object Pop3Server : SMTPServer(null) {
         }
     }
 
-
     override fun stop() {
         serverThread?.shutdown()
         serverThread = null
         started = false
     }
 
-    class Pop3ServerThread(socket: ServerSocket) : ServerThread(socket) {
+    inner class Pop3ServerThread(socket: ServerSocket) : ServerThread(socket, this@Pop3Server) {
         override fun createSession(socket: Socket): MailSession {
-            return Pop3Session(this, socket)
+            return Pop3Session(this, socket, config)
         }
     }
 }

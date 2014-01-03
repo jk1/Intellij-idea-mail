@@ -8,8 +8,6 @@ import github.jk1.smtpidea.Icons
 /**
  * Launches plugin configuration dialog.
  * If configuration has been changed running SMTP server is restarted.
- *
- * @author Evgeny Naumenko
  */
 public class ConfigureAction : AnAction("Configure", "Description", Icons.SETTINGS){
 

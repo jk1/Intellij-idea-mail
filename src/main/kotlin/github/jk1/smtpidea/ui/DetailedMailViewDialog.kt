@@ -11,8 +11,6 @@ import github.jk1.smtpidea.server.smtp.MailSession
 
 /**
  * Dialog showing detailed message contents: headers, body and so on
- *
- * @author Evgeny Naumenko
  */
 public class DetailedMailViewDialog(project: Project?, val info: MailSession) : DialogWrapper(project){
 
@@ -24,8 +22,8 @@ public class DetailedMailViewDialog(project: Project?, val info: MailSession) : 
     }
 
     override fun createCenterPanel(): JComponent {
-        this.addTab("Raw", info.getRawMessage())
-        this.addTab("Text", info.getFormattedMessage())
+        addTab("Raw", info.getRawMessage())
+        addTab("Text", info.getFormattedMessage())
         return tabbedPane
     }
 

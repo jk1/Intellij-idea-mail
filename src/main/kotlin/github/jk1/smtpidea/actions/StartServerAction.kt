@@ -11,8 +11,6 @@ import github.jk1.smtpidea.server.pop3.Pop3ServerManager
 /**
  * Launches an SMTP(S) server. This action is only enabled if server is not
  * running, so it's impossible to run two servers simultaneously.
- *
- * @author Evgeny Naumenko
  */
 public class StartServerAction<T>(val cls: Class<T>, tooltip: String, descr: String) : AnAction(tooltip, descr, Icons.START) {
 

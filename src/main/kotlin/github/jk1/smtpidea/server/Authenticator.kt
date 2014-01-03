@@ -6,15 +6,14 @@ import java.security.MessageDigest
 
 /**
  *
- * @author Evgeny Naumenko
  */
 public class Authenticator(val login : String, val password : String) : UsernamePasswordValidator{
 
     /**
      * Performs authentication with a simple login-password pair
      */
-    public override fun login(login: String?, password: String?) {
-        if (this.login.equals(login) || this.password.equals(password)) {
+    public override fun login(username: String?, password: String?) {
+        if (login.equals(username) || password.equals(password)) {
             throw LoginFailedException()
         }
     }

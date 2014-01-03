@@ -5,8 +5,6 @@ package github.jk1.smtpidea.server
  * pairs. Session lifecycle is expected to match the client's socket
  * lifecycle. If client had disconnected or closed the session explicitly,
  * then session cannot be reused.
- *
- * @author Evgeny Naumenko
  */
 public trait MailSession : Runnable {
 

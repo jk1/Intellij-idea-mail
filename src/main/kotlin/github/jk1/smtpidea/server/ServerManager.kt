@@ -6,7 +6,7 @@ import com.intellij.notification.NotificationType
 import com.intellij.notification.Notifications
 
 /**
- * @author Evgeny Naumenko
+ *
  */
 public trait ServerManager<T : ServerConfig> {
 
@@ -18,8 +18,8 @@ public trait ServerManager<T : ServerConfig> {
             this.configuration = configuration
             // restart server on configuration change
             if (running) {
-                this.stopServer()
-                this.startServer()
+                stopServer()
+                startServer()
             }
         }
 

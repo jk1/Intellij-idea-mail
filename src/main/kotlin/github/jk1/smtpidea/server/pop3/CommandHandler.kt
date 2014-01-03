@@ -2,8 +2,6 @@ package github.jk1.smtpidea.server.pop3
 
 import java.util.HashMap
 import java.util.Locale
-import org.subethamail.smtp.server.InvalidCommandNameException
-import org.subethamail.smtp.server.UnknownCommandException
 import github.jk1.smtpidea.config.Pop3Config
 import github.jk1.smtpidea.store.InboxFolder
 import org.subethamail.smtp.auth.LoginFailedException
@@ -12,29 +10,11 @@ import javax.mail.Flags.Flag
 import java.util.Collections
 import java.io.BufferedReader
 import java.io.InputStreamReader
+
 /**
  *
- * @author Evgeny Naumenko
  */
-object CommandHandler {
-
-    private val commands: MutableMap<String, (List<String>, Pop3Session) -> Unit>
-            = HashMap<String, (List<String>, Pop3Session) -> Unit>();
-
-    public fun configure(config: Pop3Config) {
-        commands.put("CAPA", ::capa)
-        commands.put("APOP", withTwoArguments(::apop))
-        commands.put("USER", withArgument(::user))
-        commands.put("PASS", withArgument(::pass))
-        commands.put("NOOP", ::noop)
-        commands.put("TOP", authenticated(withMessageIdArgument(withSecondIntArgument(::top))))
-        commands.put("STAT", authenticated(::stat))
-        commands.put("LIST", authenticated(::list))
-        commands.put("RETR", authenticated(withMessageIdArgument(::retr)))
-        commands.put("DELE", authenticated(withMessageIdArgument(::dele)))
-        commands.put("RSET", ::rset)
-        commands.put("QUIT", ::quit)
-    }
+class CommandHandler(val config: Pop3Config) {
 
     /**
      * Parse client line, choose an appropriate POP3 command and delegate actual processing
@@ -42,13 +22,24 @@ object CommandHandler {
     public fun handle(commandLine: String, session: Pop3Session) {
         val tokens = commandLine.trim().split(" ").filter { !it.trim().isEmpty() }
         if (tokens.isEmpty()) {
-            throw InvalidCommandNameException("Error: bad syntax")
+            session.writeErrorResponseLine("Error: bad syntax")
         }
         val key = tokens.head?.toUpperCase(Locale.ENGLISH)
-        if (commands.containsKey(key)) {
-            throw UnknownCommandException("Error: unknown command '$key'")
-        }
-        commands.get(key)?.invoke(tokens.tail, session);
+        when (key) {
+            "CAPA" -> ::capa
+            "APOP" -> withTwoArguments(::apop)
+            "USER" -> withArgument(::user)
+            "PASS" -> withArgument(::pass)
+            "NOOP" -> ::noop
+            "TOP" -> authenticated(withMessageIdArgument(withSecondIntArgument(::top)))
+            "STAT" -> authenticated(::stat)
+            "LIST" -> authenticated(::list)
+            "RETR" -> authenticated(withMessageIdArgument(::retr))
+            "DELE" -> authenticated(withMessageIdArgument(::dele))
+            "RSET" -> ::rset
+            "QUIT" -> ::quit
+            else -> {(list: List<String>, session: Pop3Session) -> session.writeErrorResponseLine("Unknown command '$key'") }
+        }(tokens.tail, session)
     }
 }
 
@@ -56,12 +47,10 @@ object CommandHandler {
 
 private fun authenticated(delegate: (List<String>, Pop3Session) -> Unit): (List<String>, Pop3Session) -> Unit {
     return {(arguments, session) ->
-        {
-            if (Pop3Server.config.authEnabled && session.authenticated) {
-                delegate.invoke(arguments, session)
-            } else {
-                session.writeErrorResponseLine("Authentication required")
-            }
+        if (!session.config.authEnabled || session.authenticated) {
+            delegate.invoke(arguments, session)
+        } else {
+            session.writeErrorResponseLine("Authentication required")
         }
     }
 }
@@ -74,25 +63,21 @@ private fun withTwoArguments(delegate: (List<String>, Pop3Session) -> Unit): (Li
 
 private fun withNArguments(expectedArgs: Int, delegate: (List<String>, Pop3Session) -> Unit): (List<String>, Pop3Session) -> Unit {
     return {(arguments: List<String>, session: Pop3Session) ->
-        {
-            if (arguments.size() >= expectedArgs) {
-                delegate.invoke(arguments, session)
-            } else {
-                session.writeErrorResponseLine("Command requires $expectedArgs argument(s)")
-            }
+        if (arguments.size() >= expectedArgs) {
+            delegate.invoke(arguments, session)
+        } else {
+            session.writeErrorResponseLine("Command requires $expectedArgs argument(s)")
         }
     }
 }
 
 private fun withIntArgument(position: Int = 1, delegate: (List<String>, Pop3Session) -> Unit): (List<String>, Pop3Session) -> Unit {
     return withArgument {(arguments: List<String>, session: Pop3Session) ->
-        {
-            try {
-                Integer.parseInt(arguments[position]) // String#split can never return nulls in a list
-                delegate.invoke(arguments, session)
-            } catch(e: NumberFormatException) {
-                session.writeErrorResponseLine("Message ID argument required")
-            }
+        try {
+            Integer.parseInt(arguments[position]) // String#split can never return nulls in a list
+            delegate.invoke(arguments, session)
+        } catch(e: NumberFormatException) {
+            session.writeErrorResponseLine("Message ID argument required")
         }
     }
 }
@@ -102,12 +87,10 @@ private fun withSecondIntArgument(delegate: (List<String>, Pop3Session) -> Unit)
 
 private fun withMessageIdArgument(delegate: (List<String>, Pop3Session) -> Unit): (List<String>, Pop3Session) -> Unit {
     return withIntArgument {(arguments: List<String>, session: Pop3Session) ->
-        {
-            if (Integer.parseInt(arguments.head!!) < InboxFolder.messageCount()) {
-                delegate.invoke(arguments, session)
-            } else {
-                session.writeErrorResponseLine("Unknown message number")
-            }
+        if (Integer.parseInt(arguments.head!!) < InboxFolder.messageCount()) {
+            delegate.invoke(arguments, session)
+        } else {
+            session.writeErrorResponseLine("Unknown message number")
         }
     }
 }
@@ -117,13 +100,13 @@ private fun withMessageIdArgument(delegate: (List<String>, Pop3Session) -> Unit)
 private fun capa(arguments: List<String>, session: Pop3Session) {
     if (arguments.isEmpty()) {
         session.writeResponseLine("""+OK Capability list follows
-             TOP
-             USER
-             SASL LOGIN PLAIN
-             RESP-CODES
-             EXPIRE 60
-             UIDL
-             .""")
+TOP
+USER
+SASL LOGIN PLAIN
+RESP-CODES
+EXPIRE 60
+UIDL
+.""")
     } else {
         // todo
     }
@@ -147,8 +130,7 @@ private fun user(arguments: List<String>, session: Pop3Session) {
  */
 private fun pass(arguments: List<String>, session: Pop3Session) {
     try {
-        val authenticator = Pop3Server.authenticator
-        authenticator?.login(session.username, arguments.head)
+        session.authenticator.login(session.username, arguments.head)
         session.authenticated = true
         session.writeOkResponseLine("Authentication accepted")
     } catch(e: LoginFailedException) {
@@ -163,11 +145,14 @@ private fun pass(arguments: List<String>, session: Pop3Session) {
  * Syntax: PASS login md5(sessionId | password)
  */
 private fun apop(arguments: List<String>, session: Pop3Session) {
-    val authenticator = Pop3Server.authenticator
-    authenticator?.login(arguments.head, session.sessionId, arguments.last?.getBytes())
-    session.authenticated = true
-    session.username = arguments.head
-    session.writeOkResponseLine("Authentication accepted")
+    try {
+        session.authenticator.login(arguments.head, session.sessionId, arguments.last?.getBytes())
+        session.authenticated = true
+        session.username = arguments.head
+        session.writeOkResponseLine("Authentication accepted")
+    } catch(e: LoginFailedException) {
+        session.writeErrorResponseLine("Username/password mismatch")
+    }
 }
 
 /**
@@ -198,7 +183,7 @@ private fun stat(arguments: List<String>, session: Pop3Session) {
  */
 private fun list(arguments: List<String>, session: Pop3Session) {
     when (arguments) {
-        Collections.EMPTY_LIST -> listAll( session)
+        Collections.EMPTY_LIST -> listAll(session)
         else -> withMessageIdArgument(::listById)(arguments, session)
     }
 }
@@ -230,7 +215,8 @@ private fun top(arguments: List<String>, session: Pop3Session) {
     val lineCount = Integer.parseInt(arguments.tail.head!!)
     val headers = InboxFolder[id].getAllHeaderLines();
     session.writeOkResponseLine("Message follows")
-    while (headers!!.hasMoreElements()) {   // todo : probably an annotation bug, investigate it
+    while (headers!!.hasMoreElements()) {
+        // todo : probably an annotation bug, investigate it
         session.writeResponseLine(headers.nextElement().toString())
     }
     session.writeResponseLine();

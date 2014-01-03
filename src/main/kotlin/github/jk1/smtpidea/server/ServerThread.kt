@@ -9,14 +9,13 @@ import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.HashSet
 import java.net.Socket
-import github.jk1.smtpidea.server.MailSession
 import github.jk1.smtpidea.server.pop3.Pop3Server
+import org.subethamail.smtp.server.SMTPServer
 
 /**
  *
- * @author Evgeny Naumenko
  */
-public abstract class ServerThread(val serverSocket: ServerSocket) : Thread() {
+public abstract class ServerThread(val serverSocket: ServerSocket, val server : SMTPServer) : Thread() {
 
     /**
      * A semaphore which is used to prevent accepting new connections by
@@ -40,17 +39,17 @@ public abstract class ServerThread(val serverSocket: ServerSocket) : Thread() {
      * this to exit, call {@link #shutdown()}.
      */
     public override fun run() {
-        while (!this.shuttingDown) {
+        while (!shuttingDown) {
             try {
                 // block if too many connections are open
                 connectionPermits.acquire()
-                val socket = this.serverSocket.accept()
-                val session = this.createSession(socket)
+                val socket = serverSocket.accept()
+                val session = createSession(socket)
                 try {
                     // add thread before starting it,
                     // because it will check the count of sessions
                     sessionThreads.add(session)
-                    Pop3Server.getExecutorService()?.execute(session)
+                    server.getExecutorService()?.execute(session)
                 } catch(e: IOException) {
                     socket.close();
                     throw e;
@@ -60,9 +59,10 @@ public abstract class ServerThread(val serverSocket: ServerSocket) : Thread() {
                     throw e;
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
                 connectionPermits.release()
                 // it also happens during shutdown, when the socket is closed
-                if (!this.shuttingDown) {
+                if (!shuttingDown) {
                     // prevent a possible loop causing 100% processor usage
                     Thread.sleep(1000)
                 }
@@ -83,10 +83,10 @@ public abstract class ServerThread(val serverSocket: ServerSocket) : Thread() {
     }
     private fun shutdownServerThread() {
         shuttingDown = true
-        this.serverSocket.close()
-        this.interrupt()
+        serverSocket.close()
+        interrupt()
         try {
-            this.join()
+            join()
         } catch (e: InterruptedException) {
             Thread.currentThread().interrupt()
         }
@@ -96,9 +96,9 @@ public abstract class ServerThread(val serverSocket: ServerSocket) : Thread() {
         for (sessionThread in HashSet(sessionThreads)) {
             sessionThread.quit()
         }
-        Pop3Server.getExecutorService()?.shutdown()
+        server.getExecutorService()?.shutdown()
         try {
-            Pop3Server.getExecutorService()?.awaitTermination(java.lang.Long.MAX_VALUE, TimeUnit.NANOSECONDS)
+            server.getExecutorService()?.awaitTermination(java.lang.Long.MAX_VALUE, TimeUnit.NANOSECONDS)
         } catch (e: InterruptedException) {
             Thread.currentThread().interrupt()
         }

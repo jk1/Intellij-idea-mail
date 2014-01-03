@@ -2,12 +2,12 @@ package github.jk1.smtpidea.config
 
 /**
  * POP3 server persistent configuration POJO
- *
- * @author Evgeny Naumenko
  */
 public class Pop3Config : ServerConfig() {
 
     public var port : Int = 110
+
+    public var serverName : String = "Intellij Idea POP3 Server"
 
     public var removalSupported : Boolean = false;
 

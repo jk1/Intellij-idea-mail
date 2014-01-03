@@ -4,7 +4,6 @@ import java.net.Socket
 import java.io.InputStream
 import org.subethamail.smtp.io.CRLFTerminatedReader
 import java.io.PrintWriter
-import org.subethamail.smtp.AuthenticationHandler
 import java.io.IOException
 import java.util.UUID
 import github.jk1.smtpidea.server.ServerThread
@@ -16,17 +15,16 @@ import github.jk1.smtpidea.config.Pop3Config
 import org.subethamail.smtp.server.CommandException
 import github.jk1.smtpidea.server.MailSession
 import javax.mail.internet.MimeMessage
+import github.jk1.smtpidea.server.Authenticator
 
 /**
  * The thread that handles a connection with current protocol session state.
  * This class passes most of it's responsibilities off to the CommandHandler.
- *
- * @author Evgeny Naumenko
  */
-public class Pop3Session(val serverThread: ServerThread, var socket: Socket) : MailSession {
+public class Pop3Session(val serverThread: ServerThread, var socket: Socket, val config: Pop3Config) : MailSession {
 
-    public var config: Pop3Config? = null
-    public var authenticationHandler: AuthenticationHandler? = null
+    public val authenticator: Authenticator = Authenticator(config.authLogin, config.authPassword)
+    private val commandHandler: CommandHandler = CommandHandler(config)
 
     /** Session state */
     private var quitting: Boolean = false
@@ -41,18 +39,16 @@ public class Pop3Session(val serverThread: ServerThread, var socket: Socket) : M
     private var writer: PrintWriter? = null
 
     {
-        this.switchToSocket(socket)
+        switchToSocket(socket)
     }
 
     public override fun run() {
         try {
-            this.runCommandLoop()
+            runCommandLoop()
         } catch (e: Exception) {
-            if (!this.quitting) {
-                this.writeErrorResponseLine("${e.getMessage()}")
-            }
+            if (!quitting) writeErrorResponseLine("${e.getMessage()}")
         } finally {
-            this.closeConnection()
+            closeConnection()
             serverThread.sessionEnded(this)
         }
     }
@@ -67,31 +63,25 @@ public class Pop3Session(val serverThread: ServerThread, var socket: Socket) : M
      *             if sending to or receiving from the client fails.
      */
     private fun runCommandLoop() {
-        this.writeOkResponseLine("${Pop3Server.getSoftwareName()} is ready $sessionId")
-        while (!this.quitting) {
+        writeOkResponseLine("${config.serverName} is ready $sessionId")
+        while (!quitting) {
             try {
-                try {
-                    val line = this.reader?.readLine()
-                    if (line != null) {
-                        CommandHandler.handle(line, this)
-                    }
-                } catch (ex: SocketException) {
-                    // Lots of clients just "hang up" rather than issuing QUIT,
-                    return
-                }
-            } catch (ex: CommandException){
-                this.writeErrorResponseLine("${ex.getMessage()}")
+                val line = reader?.readLine()
+                if (line != null) commandHandler.handle(line, this)
+            } catch (ex: SocketException) {
+                // Lots of clients just "hang up" rather than issuing QUIT,
+                return
             } catch (ex: DropConnectionException) {
-                this.writeErrorResponseLine("Closing connection: ${ex.getErrorResponse()}")
+                writeErrorResponseLine("Closing connection: ${ex.getErrorResponse()}")
                 return
             } catch (ex: SocketTimeoutException) {
-                this.writeErrorResponseLine("Closing connection: timeout waiting for data from client.")
+                writeErrorResponseLine("Closing connection: timeout waiting for data from client.")
                 return
             } catch (te: CRLFTerminatedReader.TerminationException) {
-                this.writeErrorResponseLine("Closing connection: syntax error at position ${te.position()}, CR and LF must be paired")
+                writeErrorResponseLine("Closing connection: syntax error at position ${te.position()}, CR and LF must be paired")
                 return
             } catch (mlle: CRLFTerminatedReader.MaxLineLengthException) {
-                this.writeErrorResponseLine("Closing connection: line too long")
+                writeErrorResponseLine("Closing connection: line too long")
                 return
             }
         }
@@ -124,26 +114,19 @@ public class Pop3Session(val serverThread: ServerThread, var socket: Socket) : M
         input = socket.getInputStream()
         reader = CRLFTerminatedReader(input)
         writer = PrintWriter(socket.getOutputStream()!!)  // http://youtrack.jetbrains.com/issue/KT-4322
-        socket.setSoTimeout(Pop3Server.getConnectionTimeout())
-    }
-    /**
-     * This method is only used by the start tls command
-     * @return the current socket to the client
-     */
-    public fun getSocket(): Socket {
-        return socket
+        socket.setSoTimeout(config.connectionTimeout)
     }
 
-    public fun writeOkResponseLine(response: String = "") : Unit = this.writeResponseLine("+OK $response")
+    public fun writeOkResponseLine(response: String = ""): Unit = writeResponseLine("+OK $response")
 
-    public fun writeErrorResponseLine(response: String = "") : Unit = this.writeResponseLine("-ERR $response")
+    public fun writeErrorResponseLine(response: String = ""): Unit = writeResponseLine("-ERR $response")
 
     override fun writeResponseLine(response: String) {
         writer?.print("$response\r\n")
         writer?.flush()
     }
 
-    public fun writeResponseMessage(response: MimeMessage) : Unit =  response.writeTo(socket.getOutputStream())
+    public fun writeResponseMessage(response: MimeMessage): Unit = response.writeTo(socket.getOutputStream())
 
     public fun getRemoteAddress(): InetSocketAddress = socket.getRemoteSocketAddress() as InetSocketAddress
 
@@ -156,7 +139,7 @@ public class Pop3Session(val serverThread: ServerThread, var socket: Socket) : M
      * Triggers the shutdown of the thread and the closing of the connection.
      */
     public override fun quit() {
-        this.quitting = true
-        this.closeConnection()
+        quitting = true
+        closeConnection()
     }
 }

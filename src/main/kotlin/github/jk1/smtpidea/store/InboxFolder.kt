@@ -7,7 +7,6 @@ import javax.mail.Flags.Flag
 
 /**
  *
- * @author Evgeny Naumenko
  */
 public object InboxFolder : MessageFolder<MimeMessage>(){
 

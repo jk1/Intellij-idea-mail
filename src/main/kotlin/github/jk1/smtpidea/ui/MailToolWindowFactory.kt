@@ -23,7 +23,7 @@ import github.jk1.smtpidea.store.InboxFolder
 import java.awt.event.MouseAdapter
 
 /**
- * @author Evgeny Naumenko
+ *
  */
 public class MailToolWindowFactory : ToolWindowFactory {
 

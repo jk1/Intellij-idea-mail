@@ -4,8 +4,6 @@ import com.intellij.openapi.util.IconLoader
 
 /**
  *  Holder object for all plugin icons
- *
- *  @author Evgeny Naumenko
  */
 object Icons{
     val SETTINGS = IconLoader.getIcon("/general/settings.png")

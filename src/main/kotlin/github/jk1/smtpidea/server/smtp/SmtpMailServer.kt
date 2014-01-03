@@ -17,8 +17,6 @@ import org.subethamail.smtp.MessageHandler
  * Basically, we can launch any number of these servers on different ports.
  * <p> Call start() to launch the server and start listening for connections
  * <p> Call stop() to disable the server (it's not supposed to be started again)
- *
- * @author Evgeny Naumenko
  */
 open class SmtpMailServer(val configuration: SmtpConfig) : SMTPServer(null), MessageHandlerFactory{
 

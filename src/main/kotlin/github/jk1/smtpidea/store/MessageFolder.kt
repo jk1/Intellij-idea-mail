@@ -2,7 +2,7 @@ import javax.mail.internet.MimeMessage
 import javax.swing.table.AbstractTableModel
 
 /**
- * @author Evgeny Naumenko
+ *
  */
 public abstract class MessageFolder<T> : AbstractTableModel() {
 

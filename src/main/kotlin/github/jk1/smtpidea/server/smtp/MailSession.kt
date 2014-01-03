@@ -49,7 +49,7 @@ public class MailSession(val context: MessageContext?) : MessageHandler{
 
     public fun getFormattedMessage(): String {
         val builder = StringBuilder()
-        this.handleMessage(message, builder)
+        handleMessage(message, builder)
         return builder.toString()
     }
 

@@ -10,8 +10,6 @@ import github.jk1.smtpidea.config.Pop3Config
 
 /**
  * Manages embedded POP3 server plugin component & provides pop3 configuration persistence.
- *
- * @author Evgeny Naumenko
  */
 State(
         name = "Pop3ServerComponent",
@@ -28,7 +26,7 @@ public class Pop3ServerComponent(val project: Project) : AbstractProjectComponen
     public override fun initComponent() {
         server = ServiceManager.getService(project, javaClass<Pop3ServerManager>())
         if (server != null) {
-            server!!.configuration = this.config   //http://youtrack.jetbrains.com/issue/KT-1213
+            server!!.configuration = config   //http://youtrack.jetbrains.com/issue/KT-1213
             if (config.launchOnStartup) {
                 server?.startServer()
             }
