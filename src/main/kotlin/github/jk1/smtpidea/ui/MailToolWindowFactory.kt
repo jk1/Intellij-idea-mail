@@ -45,11 +45,9 @@ public class MailToolWindowFactory : ToolWindowFactory {
         val mailTable = JBTable(OutboxFolder);
         mailTable.addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent) {
-                if (e.getClickCount() > 1) {
-                    val row = mailTable.getSelectedRow();
-                    if (row != -1) {
-                        DetailedMailViewDialog(project, OutboxFolder[row]).show();
-                    }
+                val row = mailTable.getSelectedRow();
+                if (e.getClickCount() > 1 && row != -1) { // double+ click with some row selected
+                    DetailedMailViewDialog(project, OutboxFolder[row]).show();
                 }
             }
         })

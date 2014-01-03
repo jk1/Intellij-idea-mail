@@ -45,12 +45,12 @@ public object OutboxFolder : MessageFolder<MailSession>(){
     public override fun getColumnName(column: Int) = columns[column]
 
     public override fun getValueAt(rowIndex: Int, columnIndex: Int): Any? {
-        val info = mails.get(rowIndex)
+        val info : MailSession = mails.get(rowIndex)
         when (columnIndex) {
-            0 -> return format.format(info.getReceivedDate())
-            1 -> return info.getIp()
-            2 -> return info.getEnvelopeFrom()
-            3 -> return info.getEnvelopeRecipients()
+            0 -> return format.format(info.receivedDate)
+            1 -> return info.ip
+            2 -> return info.envelopeFrom
+            3 -> return info.envelopeRecipients
         }
         throw IllegalStateException("No value defined for column $columnIndex")
     }
