@@ -59,7 +59,6 @@ public abstract class ServerThread(val serverSocket: ServerSocket, val server : 
                     throw e;
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
                 connectionPermits.release()
                 // it also happens during shutdown, when the socket is closed
                 if (!shuttingDown) {

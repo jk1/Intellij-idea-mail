@@ -28,8 +28,6 @@ public class Pop3Config : ServerConfig() {
      */
     public var expiresDays : Int = 0
 
-    public var authEnabled : Boolean = false
-
     public var authLogin : String = ""
 
     public var authPassword : String = ""

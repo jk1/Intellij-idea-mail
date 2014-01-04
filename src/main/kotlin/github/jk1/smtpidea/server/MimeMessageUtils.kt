@@ -7,9 +7,10 @@ import java.io.InputStreamReader
 import github.jk1.smtpidea.server.pop3.Pop3Session
 
 /**
- * Extension functions for MimeMessage to support
+ * Extension functions for MimeMessage to support server implementations
  */
 public object MimeMessageUtils{
+
     public fun MimeMessage.writeTo(session: Pop3Session, lineCount: Int) {
         val headers = getAllHeaderLines();
         while (headers!!.hasMoreElements()) {

@@ -12,10 +12,10 @@ import org.subethamail.smtp.DropConnectionException
 import java.net.SocketTimeoutException
 import java.net.InetSocketAddress
 import github.jk1.smtpidea.config.Pop3Config
-import org.subethamail.smtp.server.CommandException
 import github.jk1.smtpidea.server.MailSession
 import javax.mail.internet.MimeMessage
 import github.jk1.smtpidea.server.Authenticator
+import github.jk1.smtpidea.log.Pop3Log
 
 /**
  * The thread that handles a connection with current protocol session state.
@@ -46,6 +46,7 @@ public class Pop3Session(val serverThread: ServerThread, var socket: Socket, val
         try {
             runCommandLoop()
         } catch (e: Exception) {
+            e.printStackTrace()
             if (!quitting) writeErrorResponseLine("${e.getMessage()}")
         } finally {
             closeConnection()
@@ -67,6 +68,7 @@ public class Pop3Session(val serverThread: ServerThread, var socket: Socket, val
         while (!quitting) {
             try {
                 val line = reader?.readLine()
+                Pop3Log.logRequest(sessionId, line)
                 if (line != null) commandHandler.handle(line, this)
             } catch (ex: SocketException) {
                 // Lots of clients just "hang up" rather than issuing QUIT,
@@ -122,6 +124,7 @@ public class Pop3Session(val serverThread: ServerThread, var socket: Socket, val
     public fun writeErrorResponseLine(response: String = ""): Unit = writeResponseLine("-ERR $response")
 
     override fun writeResponseLine(response: String) {
+        Pop3Log.logResponse(sessionId, response)
         writer?.print("$response\r\n")
         writer?.flush()
     }

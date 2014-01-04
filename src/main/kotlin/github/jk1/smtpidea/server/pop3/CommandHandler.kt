@@ -71,7 +71,7 @@ private fun withNArguments(expectedArgs: Int, delegate: (List<String>, Pop3Sessi
     }
 }
 
-private fun withIntArgument(position: Int = 1, delegate: (List<String>, Pop3Session) -> Unit): (List<String>, Pop3Session) -> Unit {
+private fun withIntArgument(position: Int = 0, delegate: (List<String>, Pop3Session) -> Unit): (List<String>, Pop3Session) -> Unit {
     return withArgument {(arguments: List<String>, session: Pop3Session) ->
         try {
             Integer.parseInt(arguments[position]) // String#split can never return nulls in a list
@@ -83,11 +83,11 @@ private fun withIntArgument(position: Int = 1, delegate: (List<String>, Pop3Sess
 }
 
 private fun withSecondIntArgument(delegate: (List<String>, Pop3Session) -> Unit): (List<String>, Pop3Session) -> Unit
-        = withIntArgument(2, delegate)
+        = withIntArgument(1, delegate)
 
 private fun withMessageIdArgument(delegate: (List<String>, Pop3Session) -> Unit): (List<String>, Pop3Session) -> Unit {
     return withIntArgument {(arguments: List<String>, session: Pop3Session) ->
-        if (Integer.parseInt(arguments.head!!) < InboxFolder.messageCount()) {
+        if (Integer.parseInt(arguments.head!!) <= InboxFolder.messageCount()) {
             delegate.invoke(arguments, session)
         } else {
             session.writeErrorResponseLine("Unknown message number")
@@ -200,7 +200,7 @@ private fun listAll(session: Pop3Session) {
 private fun listById(arguments: List<String>, session: Pop3Session) {
     val id = Integer.parseInt(arguments.head!!) // String#split can never return nulls in a list
     session.writeOkResponseLine()
-    session.writeResponseLine("$id ${InboxFolder[id]}")
+    session.writeResponseLine("$id ${InboxFolder[id - 1]}")
     session.writeResponseLine(".")
 }
 
@@ -213,22 +213,24 @@ private fun listById(arguments: List<String>, session: Pop3Session) {
 private fun top(arguments: List<String>, session: Pop3Session) {
     val id = Integer.parseInt(arguments.head!!) // String#split can never return nulls in a list
     val lineCount = Integer.parseInt(arguments.tail.head!!)
-    val headers = InboxFolder[id].getAllHeaderLines();
+    val headers = InboxFolder[id - 1].getAllHeaderLines();
     session.writeOkResponseLine("Message follows")
     while (headers!!.hasMoreElements()) {
         // todo : probably an annotation bug, investigate it
         session.writeResponseLine(headers.nextElement().toString())
     }
-    session.writeResponseLine();
-    val reader: BufferedReader = BufferedReader(InputStreamReader(InboxFolder[id].getRawInputStream()!!)) // todo: same shit
-    for (i in 1..lineCount) {
-        val line = reader.readLine()
-        if (line != null) {
-            session.writeResponseLine(line)
+    if (lineCount > 0) {
+        session.writeResponseLine();
+        val reader: BufferedReader = BufferedReader(InputStreamReader(InboxFolder[id - 1].getRawInputStream()!!)) // todo: same shit
+        for (i in 1..lineCount) {
+            val line = reader.readLine()
+            if (line != null) {
+                session.writeResponseLine(line)
+            }
         }
     }
     session.writeResponseLine("\r\n.")
-    InboxFolder[id].setFlag(Flag.SEEN, true)
+    InboxFolder[id - 1].setFlag(Flag.SEEN, true)
 }
 
 /**
@@ -239,9 +241,9 @@ private fun top(arguments: List<String>, session: Pop3Session) {
 private fun retr(arguments: List<String>, session: Pop3Session) {
     val id = Integer.parseInt(arguments.head!!) // String#split can never return nulls in a list
     session.writeOkResponseLine("Message follows")
-    session.writeResponseMessage(InboxFolder[id])
+    session.writeResponseMessage(InboxFolder[id - 1])
     session.writeResponseLine("\r\n.")
-    InboxFolder[id].setFlag(Flag.SEEN, true)
+    InboxFolder[id - 1].setFlag(Flag.SEEN, true)
 }
 
 /**
@@ -253,7 +255,7 @@ private fun retr(arguments: List<String>, session: Pop3Session) {
  */
 private fun dele(arguments: List<String>, session: Pop3Session) {
     val id = Integer.parseInt(arguments.head!!) // String#split can never return nulls in a list
-    InboxFolder[id].setFlag(Flag.DELETED, true)
+    InboxFolder[id - 1].setFlag(Flag.DELETED, true)
     session.writeOkResponseLine("Message $id marked for deletion")
 }
 

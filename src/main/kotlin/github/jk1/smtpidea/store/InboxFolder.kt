@@ -44,7 +44,7 @@ public object InboxFolder : MessageFolder<MimeMessage>(){
      * @return - sum of octet size of all messages in this folder
      */
     fun totalSize(): Int {
-        return mails.fold(0, {(sum: Int, item: MimeMessage) -> sum + item.getSize() })
+        return mails.fold(0, {(sum, item) -> sum + item.getSize()})
     }
 
     override fun getColumnCount(): Int = 4
