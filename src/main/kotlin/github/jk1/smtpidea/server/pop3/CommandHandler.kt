@@ -47,7 +47,7 @@ class CommandHandler(val config: Pop3Config) {
 
 private fun authenticated(delegate: (List<String>, Pop3Session) -> Unit): (List<String>, Pop3Session) -> Unit {
     return {(arguments, session) ->
-        if (!session.config.authEnabled || session.authenticated) {
+        if (session.authenticated) {
             delegate.invoke(arguments, session)
         } else {
             session.writeErrorResponseLine("Authentication required")

@@ -8,7 +8,7 @@ import java.util.HashMap
  * Radio button group mapped to enum set. Simplifies
  * UI control bindings for enum-typed configuration properties.
  */
-public class EnumRadioGroup<T> : ButtonGroup(){
+ class EnumRadioGroup<T> : ButtonGroup(){
 
     private var mapping: MutableMap<T, AbstractButton> = HashMap<T, AbstractButton>()
 
