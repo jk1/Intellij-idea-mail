@@ -7,9 +7,9 @@ import github.jk1.smtpidea.Icons
 
 /**
  * Launches plugin configuration dialog.
- * If configuration has been changed running SMTP server is restarted.
+ * If configuration has been changed running server is restarted.
  */
-public class ConfigureAction : AnAction("Configure", "Description", Icons.SETTINGS){
+class ConfigureAction : AnAction("Configure", "Open mail server configuration dialog", Icons.SETTINGS){
 
     override fun actionPerformed(p0: AnActionEvent?) {
         val project = p0?.getProject()

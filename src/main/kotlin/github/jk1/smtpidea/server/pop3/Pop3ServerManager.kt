@@ -12,7 +12,7 @@ public class Pop3ServerManager : ServerManager<Pop3Config>{
     override var configuration: Pop3Config = Pop3Config()
     private var server : Pop3Server? = null
 
-    override fun startServer() {
+    override fun start() {
         try {
             if (running){
                 server?.stop()
@@ -26,7 +26,7 @@ public class Pop3ServerManager : ServerManager<Pop3Config>{
         }
     }
 
-    override fun stopServer() {
+    override fun stop() {
         try {
             server?.stop()
             running = false

@@ -11,4 +11,8 @@ public object Pop3Log : ServerLog {
     override fun logResponse(sessionId: String, content: String?) {
         println("<< $content")
     }
+
+    override fun clear() {
+        println("==== Log cleared ====")
+    }
 }

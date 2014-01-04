@@ -1,10 +1,10 @@
-import javax.mail.internet.MimeMessage
 import javax.swing.table.AbstractTableModel
+import github.jk1.smtpidea.store.Clearable
 
 /**
  *
  */
-public abstract class MessageFolder<T> : AbstractTableModel() {
+public abstract class MessageFolder<T> : AbstractTableModel(), Clearable {
 
     /**
      * @return collection of all messages in this folder
@@ -23,6 +23,4 @@ public abstract class MessageFolder<T> : AbstractTableModel() {
 
 
     public abstract fun add(message: T)
-
-    public abstract fun clear()
 }

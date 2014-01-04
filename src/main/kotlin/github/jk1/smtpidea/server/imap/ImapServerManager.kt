@@ -10,8 +10,11 @@ public class ImapServerManager : ServerManager<Pop3Config>{
 
     override var running: Boolean = false
 
-    override fun startServer() {
+    override fun start() {
+        throw UnsupportedOperationException("Not implemented")
     }
-    override fun stopServer() {
+
+    override fun stop() {
+        throw UnsupportedOperationException("Not implemented")
     }
 }

@@ -24,14 +24,14 @@ public class SmtpServerComponent(val project: Project) : AbstractProjectComponen
     private var configuration: SmtpConfig = SmtpConfig()
     private var server: SmtpServerManager? = null
 
-    public override fun disposeComponent() = server?.stopServer()
+    public override fun disposeComponent() = server?.stop()
 
     public override fun initComponent() {
         server = ServiceManager.getService(project, javaClass<SmtpServerManager>())
         if (server != null) {
             server!!.configuration = configuration  // http://youtrack.jetbrains.com/issue/KT-1213
             if (configuration.launchOnStartup) {
-                server?.startServer()
+                server?.start()
             }
         }
     }

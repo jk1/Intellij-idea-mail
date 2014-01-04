@@ -28,7 +28,7 @@ public class Pop3ServerComponent(val project: Project) : AbstractProjectComponen
         if (server != null) {
             server!!.configuration = config   //http://youtrack.jetbrains.com/issue/KT-1213
             if (config.launchOnStartup) {
-                server?.startServer()
+                server?.start()
             }
         }
     }
@@ -48,7 +48,7 @@ public class Pop3ServerComponent(val project: Project) : AbstractProjectComponen
     }
 
     public override fun disposeComponent() {
-        server?.stopServer()
+        server?.stop()
     }
 }
 

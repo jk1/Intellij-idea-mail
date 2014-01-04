@@ -13,7 +13,7 @@ public class SmtpServerManager : ServerManager<SmtpConfig> {
     override var running: Boolean = false
     override var configuration: SmtpConfig = SmtpConfig()
 
-    public override fun startServer() {
+    public override fun start() {
         if (configuration.transportSecurity == SmtpConfig.TransportSecurity.SSL) {
             server = SmtpsMailServer(configuration)
         } else {
@@ -28,7 +28,7 @@ public class SmtpServerManager : ServerManager<SmtpConfig> {
         }
 
     }
-    public override fun stopServer() {
+    public override fun stop() {
         try {
             server?.stop()
             running = false

@@ -8,10 +8,9 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.openapi.project.Project
-import github.jk1.smtpidea.actions.StartServerAction
-import github.jk1.smtpidea.actions.StopSmtpServerAction
+import github.jk1.smtpidea.actions.ActionRegistry
 import github.jk1.smtpidea.actions.ConfigureAction
-import github.jk1.smtpidea.actions.DeleteMailsAction
+import github.jk1.smtpidea.actions.ClearAction
 
 /**
  *  SMTP server representation tab fot plugin tool window.
@@ -37,9 +36,9 @@ class SmtpServerContent(val project: Project) : BaseContent("SMTP Server") {
         mailTable.getColumnModel()?.getColumn(1)?.setPreferredWidth(100);
         add(JBScrollPane(mailTable), BorderLayout.CENTER);
         add(createActionsButtonPane(
-                StartServerAction.SMTP,
-                StopSmtpServerAction(),
-                ConfigureAction(),
-                DeleteMailsAction()), BorderLayout.WEST);
+                ActionRegistry.START_SMTP,
+                ActionRegistry.STOP_SMTP,
+                ActionRegistry.CONFIGURE,
+                ActionRegistry.CLEAR_OUTBOX_FOLDER), BorderLayout.WEST);
     }
 }

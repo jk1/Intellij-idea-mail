@@ -8,9 +8,7 @@ import com.intellij.notification.Notifications
 /**
  *
  */
-public trait ServerManager<T : ServerConfig> {
-
-    public var running: Boolean
+public trait ServerManager<T : ServerConfig> : RunnableService {
 
     public open var configuration: T
         get() = configuration
@@ -18,14 +16,10 @@ public trait ServerManager<T : ServerConfig> {
             this.configuration = configuration
             // restart server on configuration change
             if (running) {
-                stopServer()
-                startServer()
+                stop()
+                start()
             }
         }
-
-    public fun startServer()
-
-    public fun stopServer()
 
     protected fun notifyFailure(message: String): Unit {
         val notification = Notification("", "Title", message, NotificationType.ERROR)
