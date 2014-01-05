@@ -36,10 +36,6 @@ public class SmtpServerComponent(val project: Project) : AbstractProjectComponen
         }
     }
 
-    public override fun getComponentName(): String = "SmtpServerComponent"
-
-    public override fun getState(): SmtpConfig = configuration
-
     public override fun loadState(smtpConfig: SmtpConfig?) {
         //may be called any time, check everything
         if (smtpConfig != null) {
@@ -49,4 +45,8 @@ public class SmtpServerComponent(val project: Project) : AbstractProjectComponen
             }
         }
     }
+
+    public override fun getComponentName(): String = "SmtpServerComponent"
+
+    public override fun getState(): SmtpConfig = configuration
 }

@@ -5,7 +5,7 @@ import github.jk1.smtpidea.store.Clearable
 /**
  *
  */
-public trait ServerLog : Clearable {
+public trait ServerLog :  Clearable {
 
     fun logRequest(sessionId: String, content: String?)
 

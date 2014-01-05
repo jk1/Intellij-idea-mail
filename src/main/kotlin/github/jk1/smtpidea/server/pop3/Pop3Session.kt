@@ -68,8 +68,10 @@ public class Pop3Session(val serverThread: ServerThread, var socket: Socket, val
         while (!quitting) {
             try {
                 val line = reader?.readLine()
-                Pop3Log.logRequest(sessionId, line)
-                if (line != null) commandHandler.handle(line, this)
+                if (line != null) {
+                    Pop3Log.logRequest(sessionId, line)
+                    commandHandler.handle(line, this)
+                }
             } catch (ex: SocketException) {
                 // Lots of clients just "hang up" rather than issuing QUIT,
                 return
