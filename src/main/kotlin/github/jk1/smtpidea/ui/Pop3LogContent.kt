@@ -27,10 +27,11 @@ class Pop3LogContent : BaseContent("POP3 Log") {
     }
 
     {
-        logTree.setRootVisible(false);
+        logTree.setRootVisible(false)
+        logTree.setCellRenderer(IconAwareTreeCellRenderer)
         Pop3Log.addTreeModelListener(pop3LogListener)
-        add(JBScrollPane(logTree), BorderLayout.CENTER);
-        add(createActionsButtonPane(ActionRegistry.CLEAR_POP3_LOG), BorderLayout.WEST);
+        add(JBScrollPane(logTree), BorderLayout.CENTER)
+        add(createActionsButtonPane(ActionRegistry.CLEAR_POP3_LOG), BorderLayout.WEST)
     }
 
 

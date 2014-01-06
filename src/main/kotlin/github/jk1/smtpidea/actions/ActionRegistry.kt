@@ -7,6 +7,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.actionSystem.AnAction
 import github.jk1.smtpidea.store.OutboxFolder
 import github.jk1.smtpidea.server.RunnableService
+import github.jk1.smtpidea.store.InboxFolder
+import github.jk1.smtpidea.log.Pop3Log
 
 /**
  *  Holds all the actions plugin offers.
@@ -24,11 +26,11 @@ public object ActionRegistry {
 
     public val CLEAR_OUTBOX_FOLDER: AnAction = ClearAction(OutboxFolder, "Delete all mails received by SMTP")
 
-    public val CLEAR_INBOX_FOLDER: AnAction = ClearAction(OutboxFolder, "Delete all mails from POP3 Inbox")
+    public val CLEAR_INBOX_FOLDER: AnAction = ClearAction(InboxFolder, "Delete all mails from POP3 Inbox")
 
-    public val CLEAR_SMTP_LOG: AnAction = ClearAction(OutboxFolder, "Clear all log records")
+    //public val CLEAR_SMTP_LOG: AnAction = ClearAction(SmtpLog, "Clear all log records")
 
-    public val CLEAR_POP3_LOG: AnAction = ClearAction(OutboxFolder, "Clear all log records")
+    public val CLEAR_POP3_LOG: AnAction = ClearAction(Pop3Log, "Clear all log records")
 
     public val CONFIGURE: AnAction = ConfigureAction()
 
