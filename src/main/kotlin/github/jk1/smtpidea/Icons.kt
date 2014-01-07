@@ -5,10 +5,10 @@ import com.intellij.openapi.util.IconLoader
 /**
  *  Holder object for all plugin icons
  */
-object Icons{
-    val SETTINGS = IconLoader.getIcon("/general/settings.png")
+public object Icons{
+    val SETTINGS = IconLoader.getIcon("/settings.png")
     val CLEAR = IconLoader.getIcon("/clear.png")
-    val START = IconLoader.getIcon("/general/run.png")
+    val START = IconLoader.getIcon("/run.png")
     val STOP = IconLoader.getIcon("/cancel.png")
     val EXPAND = IconLoader.getIcon("/expandall.png")
     val COLLAPSE = IconLoader.getIcon("/collapseall.png")

@@ -30,6 +30,7 @@ dependencies {
     ideaAPI files('lib/annotations.jar')
     ideaAPI files('lib/util.jar')
     ideaAPI files('lib/extensions.jar')
+    ideaAPI files('lib/trove4j.jar')
 
     testCompile 'junit:junit:4.11'
     testCompile 'org.mockito:mockito-all:1.9.5'
@@ -46,7 +47,7 @@ buildscript {
 }
 
 
-task dist(dependsOn: jar, type: Zip) {
+task dist(dependsOn: [jar, check], type: Zip) {
     into('intellij-mail/lib') {
         from jar.outputs.files, configurations.libs
     }
