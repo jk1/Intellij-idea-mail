@@ -39,7 +39,6 @@ public class Pop3Server(val config: Pop3Config) : SMTPServer(null) {
     override fun stop() {
         serverThread?.shutdown()
         serverThread = null
-        started = false
     }
 
     inner class Pop3ServerThread(socket: ServerSocket) : ServerThread(socket, this@Pop3Server) {

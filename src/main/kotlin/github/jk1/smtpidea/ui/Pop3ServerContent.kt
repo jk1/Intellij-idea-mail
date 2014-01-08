@@ -16,9 +16,10 @@ class Pop3ServerContent : BaseContent("POP3 Server") {
         mailTable.setExpandableItemsEnabled(true);
         add(JBScrollPane(mailTable), BorderLayout.CENTER);
         add(createActionsButtonPane(
-                ActionRegistry.START_POP3,
-                ActionRegistry.STOP_POP3,
-                ActionRegistry.CONFIGURE,
-                ActionRegistry.CLEAR_INBOX_FOLDER), BorderLayout.WEST);
+                ActionRegistry.createMailAction(),
+                ActionRegistry.startPop3(),
+                ActionRegistry.stopPop3(),
+                ActionRegistry.configure(),
+                ActionRegistry.clearInboxFolder()), BorderLayout.WEST);
     }
 }

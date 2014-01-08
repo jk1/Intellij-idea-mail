@@ -8,8 +8,7 @@ import javax.swing.JLabel
 import javax.swing.SwingConstants
 
 /**
- *  Replaces default icons for JTree node with custom ones,
- *  if node itself is able to provide an icon
+ *  Replaces default icons for JTree node with custom ones, if node itself is able to provide an icon
  */
 object IconAwareTreeCellRenderer : DefaultTreeCellRenderer() {
 

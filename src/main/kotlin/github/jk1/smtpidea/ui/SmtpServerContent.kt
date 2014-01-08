@@ -36,9 +36,9 @@ class SmtpServerContent(val project: Project) : BaseContent("SMTP Server") {
         mailTable.getColumnModel()?.getColumn(1)?.setPreferredWidth(100);
         add(JBScrollPane(mailTable), BorderLayout.CENTER);
         add(createActionsButtonPane(
-                ActionRegistry.START_SMTP,
-                ActionRegistry.STOP_SMTP,
-                ActionRegistry.CONFIGURE,
-                ActionRegistry.CLEAR_OUTBOX_FOLDER), BorderLayout.WEST);
+                ActionRegistry.startSmtp(),
+                ActionRegistry.stopSmtp(),
+                ActionRegistry.configure(),
+                ActionRegistry.clearOutboxFolder()), BorderLayout.WEST);
     }
 }

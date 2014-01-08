@@ -6,6 +6,7 @@ import com.intellij.openapi.util.IconLoader
  *  Holder object for all plugin icons
  */
 public object Icons{
+    val ADD = IconLoader.getIcon("/add.png")
     val SETTINGS = IconLoader.getIcon("/settings.png")
     val CLEAR = IconLoader.getIcon("/clear.png")
     val START = IconLoader.getIcon("/run.png")
