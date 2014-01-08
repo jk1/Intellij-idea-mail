@@ -27,14 +27,14 @@ public object InboxFolder : MessageFolder<MimeMessage>(){
     }
 
     public override fun add(message: MimeMessage) {
-        SwingUtilities.invokeLater({
+        SwingUtilities.invokeAndWait({
             InboxFolder.mails.add(message)
             InboxFolder.fireTableDataChanged()
         })
     }
 
     public override fun clear() {
-        SwingUtilities.invokeLater({
+        SwingUtilities.invokeAndWait({
             InboxFolder.mails.clear()
             InboxFolder.fireTableDataChanged()
         })
