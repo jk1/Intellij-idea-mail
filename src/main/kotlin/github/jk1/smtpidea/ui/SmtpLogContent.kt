@@ -8,7 +8,8 @@ import java.awt.BorderLayout
 import github.jk1.smtpidea.actions.ActionRegistry
 
 /**
- *
+ * SMTP log tab for main plugin tool window.
+ * Contains tree-like log representation and all eligible log actions.
  */
 class SmtpLogContent : BaseContent("SMTP Log") {
     val logTree = JTree(SmtpLog);

@@ -8,7 +8,7 @@ import javax.swing.event.TreeModelEvent
  * Thanks to this adapter actual listener implementations shouldn't bother to
  * implement all the methods of TreeModelListener if they don't need to.
  */
-public trait TreeModelListenerAdapter : TreeModelListener {
+trait TreeModelListenerAdapter : TreeModelListener {
 
     override fun treeNodesInserted(e: TreeModelEvent?) {}
     override fun treeNodesChanged(e: TreeModelEvent?) {}
